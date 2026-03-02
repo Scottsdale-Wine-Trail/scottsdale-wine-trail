@@ -13,6 +13,7 @@ export function TrailMapClient({ wineries }: { wineries: Winery[] }) {
     // Dynamically import mapbox-gl to avoid SSR issues
     let map: { remove: () => void } | null = null;
 
+    import("mapbox-gl/dist/mapbox-gl.css" as never).catch(() => null);
     import("mapbox-gl").then((mapboxgl) => {
       const mb = mapboxgl.default;
       mb.accessToken = token;
