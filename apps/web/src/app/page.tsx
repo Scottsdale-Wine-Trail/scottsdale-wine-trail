@@ -204,6 +204,84 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Passport Teaser */}
+      <section className="py-20 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div
+            className="relative rounded-3xl overflow-hidden"
+            style={{
+              background:
+                "linear-gradient(135deg, hsl(351,67%,17%) 0%, hsl(280,55%,13%) 60%, hsl(43,70%,19%) 100%)",
+            }}
+          >
+            {/* Ambient glows */}
+            <div
+              className="absolute -top-20 -right-20 w-72 h-72 rounded-full opacity-[0.12] blur-3xl pointer-events-none"
+              style={{ background: "hsl(43,100%,55%)" }}
+              aria-hidden="true"
+            />
+            <div
+              className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full opacity-[0.08] blur-3xl pointer-events-none"
+              style={{ background: "hsl(351,67%,50%)" }}
+              aria-hidden="true"
+            />
+
+            <div className="relative grid md:grid-cols-2 gap-10 items-center px-8 py-14 md:px-16">
+              {/* Text */}
+              <div className="text-white">
+                <span className="inline-block text-xs font-semibold tracking-[0.2em] uppercase px-3 py-1.5 rounded-full border border-gold-400/40 text-gold-300 mb-5">
+                  Digital Passport · Free App · $5
+                </span>
+                <h2 className="font-serif text-4xl md:text-5xl font-bold mb-5 leading-tight">
+                  Collect Stamps.
+                  <br />
+                  <span style={{ color: "hsl(43,100%,65%)" }}>Earn Rewards.</span>
+                </h2>
+                <p className="text-white/75 text-lg leading-relaxed mb-4">
+                  The Scottsdale Wine Trail Digital Passport is your mobile
+                  companion for the full trail experience — $2 off every flight,
+                  guided navigation, and rewards for completing the trail.
+                </p>
+                <p className="text-white/50 text-sm mb-8">
+                  Available on iPhone &amp; Android · One-time $5 in-app purchase
+                </p>
+                <Link
+                  href="/passport"
+                  className="gold-gradient text-white font-semibold px-7 py-3.5 rounded-xl inline-block hover:opacity-90 transition-all transform hover:scale-105 shadow-lg text-base"
+                >
+                  Learn About the Passport →
+                </Link>
+              </div>
+
+              {/* Stamp grid visual */}
+              <div className="flex justify-center">
+                <div className="relative w-60 h-60">
+                  <div className="absolute inset-0 rounded-full border-4 border-dashed border-gold-400/30" />
+                  <div className="absolute inset-7 grid grid-cols-3 grid-rows-3 gap-2.5">
+                    {Array.from({ length: 9 }).map((_, i) => (
+                      <div
+                        key={i}
+                        className={`rounded-xl flex items-center justify-center text-xl border transition-all ${
+                          i < 5
+                            ? "bg-gold-400/20 border-gold-400/50 text-gold-300"
+                            : "bg-white/5 border-white/10 text-white/20"
+                        }`}
+                      >
+                        {i < 5 ? "🍷" : "·"}
+                      </div>
+                    ))}
+                  </div>
+                  {/* Centre label */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <span className="sr-only">5 of 9 stamps collected</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Testimonials */}
       <section className="py-20 wine-gradient text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

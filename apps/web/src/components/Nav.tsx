@@ -8,6 +8,7 @@ const links = [
   { href: "/trail-map", label: "Trail Map" },
   { href: "/events", label: "Events" },
   { href: "/wines", label: "Wines" },
+  { href: "/passport", label: "Passport", highlight: true },
 ];
 
 export function Nav() {
@@ -37,19 +38,32 @@ export function Nav() {
         >
           Scottsdale Wine Trail
         </Link>
-        <ul className="flex gap-8">
-          {links.map(({ href, label }) => (
+        <ul className="flex gap-8 items-center">
+          {links.map(({ href, label, highlight }) => (
             <li key={href}>
-              <Link
-                href={href}
-                className={`text-sm font-medium tracking-wide transition-colors ${
-                  scrolled
-                    ? "text-gray-600 hover:text-burgundy-700"
-                    : "text-white/90 hover:text-white"
-                }`}
-              >
-                {label}
-              </Link>
+              {highlight ? (
+                <Link
+                  href={href}
+                  className={`text-sm font-semibold tracking-wide px-3 py-1.5 rounded-full transition-all ${
+                    scrolled
+                      ? "gold-gradient text-white shadow-sm hover:opacity-90"
+                      : "bg-white/20 backdrop-blur-sm text-white border border-white/30 hover:bg-white/30"
+                  }`}
+                >
+                  {label}
+                </Link>
+              ) : (
+                <Link
+                  href={href}
+                  className={`text-sm font-medium tracking-wide transition-colors ${
+                    scrolled
+                      ? "text-gray-600 hover:text-burgundy-700"
+                      : "text-white/90 hover:text-white"
+                  }`}
+                >
+                  {label}
+                </Link>
+              )}
             </li>
           ))}
         </ul>
