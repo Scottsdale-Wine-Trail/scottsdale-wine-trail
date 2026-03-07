@@ -1,9 +1,14 @@
 export function Footer() {
   return (
-    <footer className="bg-wine-950 text-wine-300 py-8 px-4 mt-auto">
-      <div className="max-w-6xl mx-auto text-center text-sm">
-        <p>© {new Date().getFullYear()} Scottsdale Wine Trail. All rights reserved.</p>
-        <p className="mt-1 text-wine-500">Arizona&apos;s Premier Wine Experience</p>
+    <footer className="wine-gradient text-white py-12 px-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-6">
+          <p className="font-serif text-2xl font-semibold mb-2">Scottsdale Wine Trail</p>
+          <p className="text-white/70 text-sm">Arizona&apos;s Premier Wine Experience</p>
+        </div>
+        <div className="border-t border-white/20 pt-6 text-center text-sm text-white/60">
+          <p>© {new Date().getFullYear()} Scottsdale Wine Trail. All rights reserved.</p>
+        </div>
       </div>
     </footer>
   );

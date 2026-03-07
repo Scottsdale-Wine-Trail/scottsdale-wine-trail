@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
-import { getWines, getWineries } from "@/lib/supabase/queries";
+import { getWines, getWineries } from "@/lib/data";
 import { WinesClient } from "@/components/WinesClient";
 
 export const metadata: Metadata = { title: "Wines" };
 
 export default async function WinesPage() {
-  const [wines, wineries] = await Promise.all([
-    getWines().catch(() => []),
-    getWineries().catch(() => []),
-  ]);
+  const [wines, wineries] = await Promise.all([getWines(), getWineries()]);
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-12">
       <h1 className="text-4xl font-bold text-wine-900 mb-2">Wine Database</h1>

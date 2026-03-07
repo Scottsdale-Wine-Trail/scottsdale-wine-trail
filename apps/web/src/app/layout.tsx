@@ -20,10 +20,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="font-sans antialiased">
+      <body className="font-sans antialiased" suppressHydrationWarning>
         <Providers>
           <Nav />
-          <main className="min-h-screen">{children}</main>
+          <main className="min-h-screen pt-16">{children}</main>
           <Footer />
         </Providers>
       </body>

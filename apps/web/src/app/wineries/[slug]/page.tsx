@@ -1,137 +1,228 @@
-import { getWineryBySlug, getWineries } from "@/lib/supabase/queries";
-import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
+import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import {
+  getUpcomingEventsByWinery,
+  getWinesByWinery,
+  getWineryBySlug,
+} from "@/lib/data";
+import { WineryLocationMap } from "@/components/WineryLocationMap";
+import { CopyAddressButton } from "@/components/CopyAddressButton";
 
-interface Props {
+type WineryDetailPageProps = {
   params: Promise<{ slug: string }>;
-}
+};
 
-export async function generateStaticParams() {
-  const wineries = await getWineries().catch(() => []);
-  return wineries.map((w) => ({ slug: w.slug }));
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: WineryDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const winery = await getWineryBySlug(slug).catch(() => null);
-  if (!winery) return { title: "Not Found" };
-  return { title: winery.name };
+  const winery = await getWineryBySlug(slug);
+
+  if (!winery) {
+    return { title: "Winery Not Found" };
+  }
+
+  return {
+    title: winery.name,
+    description: winery.description || `${winery.name} at ${winery.address}, ${winery.city}, ${winery.state} ${winery.zip}`,
+  };
 }
 
-export default async function WineryDetailPage({ params }: Props) {
+export default async function WineryDetailPage({ params }: WineryDetailPageProps) {
   const { slug } = await params;
-  const winery = await getWineryBySlug(slug).catch(() => null);
-  if (!winery) notFound();
+  const winery = await getWineryBySlug(slug);
 
-  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  if (!winery) {
+    notFound();
+  }
+
+  const [events, wines] = await Promise.all([
+    getUpcomingEventsByWinery(winery.id),
+    getWinesByWinery(winery.id),
+  ]);
+
+  const fullAddress = `${winery.address}, ${winery.city}, ${winery.state} ${winery.zip}`;
+  const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
-      {/* Hero image */}
-      {winery.hero_image_url && (
-        <div className="relative h-64 md:h-96 rounded-2xl overflow-hidden mb-8">
-          <Image
-            src={winery.hero_image_url}
-            alt={winery.name}
-            fill
-            className="object-cover"
-          />
-        </div>
-      )}
-
-      <div className="flex flex-col md:flex-row md:items-start gap-8">
-        <div className="flex-1">
-          <h1 className="text-4xl font-bold text-wine-900 mb-2">
-            {winery.name}
-          </h1>
-          <div className="flex flex-wrap gap-2 mb-4">
-            {winery.tags.map((tag) => (
-              <span
-                key={tag}
-                className="bg-wine-100 text-wine-700 text-sm px-3 py-1 rounded-full"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-          <p className="text-wine-700 text-lg leading-relaxed mb-6">
-            {winery.description}
-          </p>
-
-          {/* Details */}
-          <div className="space-y-3 text-wine-800">
-            <div>
-              <span className="font-semibold">Address:</span>{" "}
-              {winery.address}, {winery.city}, {winery.state} {winery.zip}
-            </div>
-            {winery.phone && (
-              <div>
-                <span className="font-semibold">Phone:</span>{" "}
-                <a
-                  href={`tel:${winery.phone}`}
-                  className="text-wine-600 hover:underline"
-                >
-                  {winery.phone}
-                </a>
-              </div>
-            )}
-            {winery.website && (
-              <div>
-                <span className="font-semibold">Website:</span>{" "}
-                <a
-                  href={winery.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-wine-600 hover:underline"
-                >
-                  {winery.website}
-                </a>
-              </div>
-            )}
-          </div>
-
-          {/* Hours */}
-          {winery.hours_json && (
-            <div className="mt-6">
-              <h2 className="text-xl font-bold text-wine-900 mb-3">Hours</h2>
-              <div className="grid grid-cols-2 gap-x-8 gap-y-1 text-wine-700">
-                {days.map((day) => (
-                  <div key={day} className="flex justify-between">
-                    <span className="font-medium">{day}</span>
-                    <span>{winery.hours_json?.[day] ?? "Closed"}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Sidebar */}
-        <div className="md:w-64 space-y-4">
-          <Link
-            href={`/trail-map?winery=${winery.id}`}
-            className="block w-full text-center bg-wine-700 text-white font-semibold px-6 py-3 rounded-full hover:bg-wine-800 transition-colors"
-          >
-            View on Map
-          </Link>
+    <>
+      {/* Hero */}
+      <div
+        className="relative h-72 md:h-96 -mt-16 flex flex-col justify-end"
+        style={
+          winery.hero_image_url
+            ? {
+                backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(20,0,30,0.75)), url('${winery.hero_image_url}')`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }
+            : undefined
+        }
+      >
+        {!winery.hero_image_url && (
+          <div className="absolute inset-0 wine-gradient" />
+        )}
+        <div className="relative max-w-5xl mx-auto w-full px-6 pb-8 pt-20">
           <Link
             href="/wineries"
-            className="block w-full text-center border border-wine-300 text-wine-700 font-semibold px-6 py-3 rounded-full hover:bg-wine-50 transition-colors"
+            className="text-white/70 hover:text-white text-sm transition-colors mb-3 inline-block"
           >
-            ← All Wineries
+            ← Back to wineries
           </Link>
+          <h1 className="font-serif text-4xl md:text-5xl font-bold text-white leading-tight">
+            {winery.name}
+          </h1>
+          {winery.city && (
+            <p className="text-white/70 mt-1">
+              {winery.city}, {winery.state}
+            </p>
+          )}
         </div>
       </div>
 
-      {/* Reviews placeholder */}
-      <section className="mt-12">
-        <h2 className="text-2xl font-bold text-wine-900 mb-4">Reviews</h2>
-        <div className="bg-wine-50 rounded-2xl p-8 text-center text-wine-500">
-          <p>Reviews coming soon. Be the first to share your experience!</p>
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Main content */}
+          <div className="lg:col-span-2 space-y-10">
+            {winery.description && (
+              <section>
+                <h2 className="font-serif text-2xl font-semibold text-gray-900 mb-3">
+                  About
+                </h2>
+                <p className="text-gray-700 leading-relaxed text-lg">
+                  {winery.description}
+                </p>
+              </section>
+            )}
+
+            {winery.tags && winery.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {winery.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="text-sm px-3 py-1 bg-gold-50 text-gold-700 rounded-full border border-gold-200"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            <section>
+              <h2 className="font-serif text-2xl font-semibold text-gray-900 mb-3">
+                Location
+              </h2>
+              {winery.lat != null && winery.lng != null ? (
+                <div className="rounded-2xl overflow-hidden shadow-md">
+                  <WineryLocationMap lat={winery.lat} lng={winery.lng} name={winery.name} />
+                </div>
+              ) : (
+                <div className="h-64 bg-gray-50 border border-gray-200 rounded-2xl flex items-center justify-center text-gray-400 font-serif italic">
+                  Map coming soon
+                </div>
+              )}
+            </section>
+
+            {events.length > 0 && (
+              <section>
+                <h2 className="font-serif text-2xl font-semibold text-gray-900 mb-4">
+                  Upcoming Events
+                </h2>
+                <ul className="space-y-3">
+                  {events.map((event) => (
+                    <li
+                      key={event.id}
+                      className="border border-gray-100 rounded-xl p-4 bg-white shadow-sm"
+                    >
+                      <p className="text-xs text-gray-400 mb-1">
+                        {new Date(event.start_date).toLocaleString()}
+                      </p>
+                      <p className="font-semibold text-gray-900">{event.title}</p>
+                      <p className="text-sm text-gray-600 mt-1">{event.description}</p>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            {wines.length > 0 && (
+              <section>
+                <h2 className="font-serif text-2xl font-semibold text-gray-900 mb-4">
+                  Wines
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {wines.map((wine) => (
+                    <div
+                      key={wine.id}
+                      className="border border-gray-100 rounded-xl p-4 bg-white shadow-sm"
+                    >
+                      <p className="font-semibold text-gray-900">{wine.name}</p>
+                      <p className="text-sm text-gray-500 mt-0.5">{wine.varietal}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+          </div>
+
+          {/* Sidebar */}
+          <aside>
+            <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-md sticky top-24 space-y-4">
+              <h3 className="font-serif text-lg font-semibold text-gray-900">
+                Visit Us
+              </h3>
+              <div className="space-y-3 text-sm text-gray-700">
+                <p className="leading-relaxed">{fullAddress}</p>
+                {winery.phone && (
+                  <p>
+                    <span className="text-gray-400">Phone</span>
+                    <br />
+                    <a href={`tel:${winery.phone}`} className="text-burgundy-600 hover:underline">
+                      {winery.phone}
+                    </a>
+                  </p>
+                )}
+                {winery.email && (
+                  <p>
+                    <span className="text-gray-400">Email</span>
+                    <br />
+                    <a href={`mailto:${winery.email}`} className="text-burgundy-600 hover:underline">
+                      {winery.email}
+                    </a>
+                  </p>
+                )}
+                {winery.website && (
+                  <p>
+                    <span className="text-gray-400">Website</span>
+                    <br />
+                    <a
+                      href={winery.website}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-burgundy-600 hover:underline break-all"
+                    >
+                      {winery.website.replace(/^https?:\/\//, "")}
+                    </a>
+                  </p>
+                )}
+              </div>
+
+              <div className="flex flex-col gap-2 pt-2">
+                <a
+                  href={directionsUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="wine-gradient text-white font-medium px-4 py-2.5 rounded-lg text-center text-sm hover:opacity-90 transition-opacity"
+                >
+                  Get Directions
+                </a>
+                <CopyAddressButton address={fullAddress} />
+              </div>
+            </div>
+          </aside>
         </div>
-      </section>
-    </div>
+      </div>
+    </>
   );
 }
