@@ -18,7 +18,6 @@ export function WineryLocationMap({ lat, lng, name }: WineryLocationMapProps) {
     let mounted = true;
     let map: import("mapbox-gl").Map | null = null;
 
-    import("mapbox-gl/dist/mapbox-gl.css").catch(() => null);
     import("mapbox-gl").then((mapboxgl) => {
       if (!mounted) return;
 

@@ -99,7 +99,6 @@ export function WineriesMapClient({ wineries }: { wineries: Winery[] }) {
 
     let mounted = true;
 
-    import("mapbox-gl/dist/mapbox-gl.css").catch(() => null);
     import("mapbox-gl").then((mod) => {
       if (!mounted || !mapContainerRef.current) return;
 
