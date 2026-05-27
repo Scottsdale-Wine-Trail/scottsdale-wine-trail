@@ -3,96 +3,110 @@ import { getFeaturedWineries } from "@/lib/data";
 import { WineryCard } from "@/components/WineryCard";
 import { CURATED_EVENTS, TYPE_COLORS } from "@/lib/data/curated-events";
 
-// Six wine motifs for the passport stamps. Each renders inside a 100x100
-// SVG between roughly y=37 and y=63 (the area between the stamp crossbars).
+// Six wine motifs for the passport stamps. Drawn as filled silhouettes in
+// a 100x100 viewBox, sized to fill ~y=18-82 inside the stamp ring.
 const STAMP_MOTIFS: { label: string; node: React.ReactNode }[] = [
   {
     label: "Wine Glass",
     node: (
-      <g
-        stroke="hsla(43, 95%, 86%, 0.92)"
-        strokeWidth="2.2"
-        fill="none"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M 40 39 L 50 54 L 60 39" />
-        <line x1="50" y1="54" x2="50" y2="62" />
-        <line x1="43" y1="62" x2="57" y2="62" />
+      <g fill="hsla(43, 95%, 88%, 0.95)">
+        {/* tulip cup */}
+        <path d="M 30 22 C 30 46 38 60 50 60 C 62 60 70 46 70 22 Z" />
+        {/* stem */}
+        <rect x="48" y="59" width="4" height="18" rx="0.5" />
+        {/* base */}
+        <rect x="34" y="76" width="32" height="4" rx="1" />
       </g>
     ),
   },
   {
     label: "Grape Cluster",
     node: (
-      <g fill="hsla(43, 95%, 86%, 0.88)">
-        {/* tiny stem on top */}
+      <g fill="hsla(43, 95%, 88%, 0.95)">
+        {/* small leaf + stem */}
         <path
-          d="M 50 36 L 50 40"
-          stroke="hsla(43, 95%, 86%, 0.88)"
-          strokeWidth="1.6"
+          d="M 50 18 L 50 25"
+          stroke="hsla(43, 95%, 88%, 0.95)"
+          strokeWidth="2"
           strokeLinecap="round"
         />
-        {/* triangle bunch */}
-        <circle cx="45" cy="42" r="2.7" />
-        <circle cx="55" cy="42" r="2.7" />
-        <circle cx="40" cy="47.5" r="2.7" />
-        <circle cx="50" cy="47.5" r="2.7" />
-        <circle cx="60" cy="47.5" r="2.7" />
-        <circle cx="45" cy="53" r="2.7" />
-        <circle cx="55" cy="53" r="2.7" />
-        <circle cx="50" cy="58.5" r="2.7" />
+        <path d="M 50 19 C 60 17 64 22 60 26 C 56 28 52 25 50 22 Z" />
+        {/* triangular bunch of berries */}
+        <circle cx="42" cy="32" r="5.5" />
+        <circle cx="50" cy="32" r="5.5" />
+        <circle cx="58" cy="32" r="5.5" />
+        <circle cx="38" cy="41" r="5.5" />
+        <circle cx="46" cy="41" r="5.5" />
+        <circle cx="54" cy="41" r="5.5" />
+        <circle cx="62" cy="41" r="5.5" />
+        <circle cx="42" cy="50" r="5.5" />
+        <circle cx="50" cy="50" r="5.5" />
+        <circle cx="58" cy="50" r="5.5" />
+        <circle cx="46" cy="59" r="5.5" />
+        <circle cx="54" cy="59" r="5.5" />
+        <circle cx="50" cy="68" r="5.5" />
       </g>
     ),
   },
   {
     label: "Wine Bottle",
     node: (
-      <g
-        stroke="hsla(43, 95%, 86%, 0.92)"
-        strokeWidth="2.2"
-        fill="none"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M 47 37 L 47 44 Q 47 46.5 45 48 L 44 49.5 Q 43 51 43 53 L 43 63 L 57 63 L 57 53 Q 57 51 56 49.5 L 55 48 Q 53 46.5 53 44 L 53 37 Z" />
-        {/* label band */}
-        <line x1="44" y1="55" x2="56" y2="55" strokeWidth="1.1" />
+      <g fill="hsla(43, 95%, 88%, 0.95)">
+        {/* bottle silhouette: neck → shoulders → body */}
+        <path d="M 45 18 L 45 32 C 45 35 42 36 40 40 C 38 44 38 47 38 52 L 38 80 L 62 80 L 62 52 C 62 47 62 44 60 40 C 58 36 55 35 55 32 L 55 18 Z" />
+        {/* label band (subtle darker stripe) */}
+        <rect x="38" y="56" width="24" height="8" fill="hsla(280, 50%, 18%, 0.45)" />
       </g>
     ),
   },
   {
     label: "Grape Leaf",
     node: (
-      <g
-        stroke="hsla(43, 95%, 86%, 0.92)"
-        strokeWidth="2"
-        fill="none"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        {/* leaf outline (5-lobed silhouette) */}
-        <path d="M 50 37 C 56 37 60 41 60 45 C 64 45 64 51 60 52 C 62 55 60 59 56 59 C 55 62 50 62 50 62 C 50 62 45 62 44 59 C 40 59 38 55 40 52 C 36 51 36 45 40 45 C 40 41 44 37 50 37 Z" />
+      <g fill="hsla(43, 95%, 88%, 0.95)">
+        {/* 5-lobed grape leaf silhouette */}
+        <path
+          d="M 50 18
+             C 54 22 58 22 62 20
+             C 64 26 68 28 72 28
+             C 70 34 72 38 76 42
+             C 70 44 68 50 70 56
+             C 64 56 60 60 60 66
+             C 56 64 52 66 50 72
+             C 48 66 44 64 40 66
+             C 40 60 36 56 30 56
+             C 32 50 30 44 24 42
+             C 28 38 30 34 28 28
+             C 32 28 36 26 38 20
+             C 42 22 46 22 50 18 Z"
+        />
         {/* center vein */}
-        <line x1="50" y1="38" x2="50" y2="62" strokeWidth="1.4" />
+        <path
+          d="M 50 22 L 50 70"
+          stroke="hsla(280, 40%, 18%, 0.35)"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
+        {/* side veins */}
+        <path
+          d="M 50 38 L 36 32 M 50 38 L 64 32 M 50 52 L 32 54 M 50 52 L 68 54"
+          stroke="hsla(280, 40%, 18%, 0.30)"
+          strokeWidth="1.2"
+          strokeLinecap="round"
+        />
       </g>
     ),
   },
   {
     label: "Wine Barrel",
     node: (
-      <g
-        stroke="hsla(43, 95%, 86%, 0.92)"
-        strokeWidth="2.2"
-        fill="none"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        {/* barrel body — curved top and bottom */}
-        <path d="M 38 41 Q 35 50 38 59 L 62 59 Q 65 50 62 41 Z" />
+      <g fill="hsla(43, 95%, 88%, 0.95)">
+        {/* barrel body (oak stave silhouette) */}
+        <path d="M 30 28 Q 22 50 30 72 L 70 72 Q 78 50 70 28 Z" />
         {/* hoops */}
-        <line x1="37.2" y1="45.5" x2="62.8" y2="45.5" strokeWidth="1.4" />
-        <line x1="37.2" y1="54.5" x2="62.8" y2="54.5" strokeWidth="1.4" />
+        <rect x="28" y="36" width="44" height="3" fill="hsla(280, 40%, 18%, 0.45)" />
+        <rect x="28" y="61" width="44" height="3" fill="hsla(280, 40%, 18%, 0.45)" />
+        {/* center bunghole accent */}
+        <circle cx="50" cy="50" r="2.5" fill="hsla(280, 40%, 18%, 0.55)" />
       </g>
     ),
   },
@@ -100,20 +114,18 @@ const STAMP_MOTIFS: { label: string; node: React.ReactNode }[] = [
     label: "Corkscrew",
     node: (
       <g
-        stroke="hsla(43, 95%, 86%, 0.92)"
-        strokeWidth="2"
         fill="none"
+        stroke="hsla(43, 95%, 88%, 0.95)"
+        strokeWidth="3.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       >
-        {/* handle */}
-        <line x1="43" y1="39" x2="57" y2="39" />
+        {/* T-handle */}
+        <line x1="36" y1="22" x2="64" y2="22" />
         {/* shaft top */}
-        <line x1="50" y1="39" x2="50" y2="43" />
-        {/* spiral */}
-        <path d="M 50 43 C 55 45 45 48 50 50 C 55 52 45 55 50 57 C 53 58 50 60 50 61" />
-        {/* point */}
-        <line x1="48" y1="61" x2="52" y2="61" strokeWidth="1.4" />
+        <line x1="50" y1="22" x2="50" y2="32" />
+        {/* helix spiral */}
+        <path d="M 50 32 C 58 36 42 42 50 46 C 58 50 42 56 50 60 C 58 64 42 70 50 74" />
       </g>
     ),
   },
@@ -464,74 +476,34 @@ export default async function HomePage() {
                                   <svg
                                     viewBox="0 0 100 100"
                                     className="w-full h-full"
-                                    style={{
-                                      filter:
-                                        "drop-shadow(0 0 1px rgba(255,210,120,0.15))",
-                                    }}
                                   >
+                                    {/* Soft tinted disc behind motif */}
+                                    <circle
+                                      cx="50"
+                                      cy="50"
+                                      r="46"
+                                      fill="hsla(43, 85%, 55%, 0.10)"
+                                    />
                                     {/* Outer ring */}
                                     <circle
                                       cx="50"
                                       cy="50"
-                                      r="44"
-                                      fill="hsla(43, 85%, 55%, 0.10)"
-                                      stroke="hsla(43, 90%, 72%, 0.62)"
-                                      strokeWidth="2.4"
+                                      r="46"
+                                      fill="none"
+                                      stroke="hsla(43, 90%, 72%, 0.70)"
+                                      strokeWidth="2.5"
                                     />
-                                    {/* Inner ring */}
+                                    {/* Subtle inner accent ring */}
                                     <circle
                                       cx="50"
                                       cy="50"
-                                      r="36"
+                                      r="41"
                                       fill="none"
-                                      stroke="hsla(43, 90%, 72%, 0.38)"
-                                      strokeWidth="0.9"
+                                      stroke="hsla(43, 90%, 72%, 0.22)"
+                                      strokeWidth="0.6"
                                     />
-                                    {/* Crossbars */}
-                                    <line
-                                      x1="14"
-                                      y1="35"
-                                      x2="86"
-                                      y2="35"
-                                      stroke="hsla(43, 90%, 72%, 0.40)"
-                                      strokeWidth="0.9"
-                                    />
-                                    <line
-                                      x1="14"
-                                      y1="65"
-                                      x2="86"
-                                      y2="65"
-                                      stroke="hsla(43, 90%, 72%, 0.40)"
-                                      strokeWidth="0.9"
-                                    />
-                                    {/* Top crest label */}
-                                    <text
-                                      x="50"
-                                      y="29"
-                                      textAnchor="middle"
-                                      fontFamily="'Playfair Display', Georgia, serif"
-                                      fontSize="9"
-                                      fontWeight="700"
-                                      letterSpacing="2.4"
-                                      fill="hsla(43, 95%, 82%, 0.85)"
-                                    >
-                                      SWT
-                                    </text>
-                                    {/* Centre motif (wine glass, grapes, bottle, leaf, barrel, corkscrew) */}
+                                    {/* Wine motif silhouette */}
                                     {STAMP_MOTIFS[i]?.node}
-                                    {/* Bottom mark */}
-                                    <text
-                                      x="50"
-                                      y="78"
-                                      textAnchor="middle"
-                                      fontFamily="Inter, sans-serif"
-                                      fontSize="6.5"
-                                      fontWeight="600"
-                                      letterSpacing="1.8"
-                                      fill="hsla(43, 95%, 82%, 0.62)"
-                                    >
-                                      VISITED
-                                    </text>
                                   </svg>
                                 ) : (
                                   <svg
@@ -541,14 +513,14 @@ export default async function HomePage() {
                                     <circle
                                       cx="50"
                                       cy="50"
-                                      r="44"
+                                      r="46"
                                       fill="none"
                                       stroke="rgba(255,255,255,0.22)"
                                       strokeWidth="1.4"
                                       strokeDasharray="3 3.5"
                                     />
-                                    {/* Faded preview of the motif waiting for a stamp */}
-                                    <g opacity="0.22">{STAMP_MOTIFS[i]?.node}</g>
+                                    {/* Ghosted preview of the awaiting motif */}
+                                    <g opacity="0.18">{STAMP_MOTIFS[i]?.node}</g>
                                   </svg>
                                 )}
                               </div>
