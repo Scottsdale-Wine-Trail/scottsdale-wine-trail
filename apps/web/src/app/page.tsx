@@ -1,7 +1,9 @@
 import Link from "next/link";
-import { getFeaturedWineries } from "@/lib/data";
+import { getFeaturedWineries, getWineries } from "@/lib/data";
 import { WineryCard } from "@/components/WineryCard";
 import { CURATED_EVENTS, TYPE_COLORS } from "@/lib/data/curated-events";
+import { getAggregateGoogleReviews } from "@/lib/data/reviews";
+import { ReviewCard } from "@/components/ReviewCard";
 
 // Six wine motifs for the passport stamps. Drawn as filled silhouettes in
 // a 100x100 viewBox, sized to fill ~y=18-82 inside the stamp ring.
@@ -111,36 +113,20 @@ const STAMP_MOTIFS: { label: string; node: React.ReactNode }[] = [
   },
 ];
 
-const TESTIMONIALS = [
-  {
-    id: 1,
-    quote:
-      "An absolutely magical evening hopping between tasting rooms. Every winery had its own personality and the wines were outstanding.",
-    name: "Sarah M.",
-    location: "Phoenix, AZ",
-    initials: "SM",
-  },
-  {
-    id: 2,
-    quote:
-      "We did the wine trail on a Saturday afternoon and couldn't believe everything was within walking distance. Perfect date night!",
-    name: "James & Lauren R.",
-    location: "Scottsdale, AZ",
-    initials: "JR",
-  },
-  {
-    id: 3,
-    quote:
-      "The Wine Collective made us feel right at home. Knowledgeable staff, a fantastic Arizona-focused list, and a relaxed atmosphere that turned a quick stop into a long, memorable afternoon.",
-    name: "David K.",
-    location: "Tempe, AZ",
-    initials: "DK",
-  },
-];
-
 export default async function HomePage() {
-  const wineries = await getFeaturedWineries(3);
+  const [wineries, allWineries] = await Promise.all([
+    getFeaturedWineries(3),
+    getWineries(),
+  ]);
   const events = CURATED_EVENTS.slice(0, 3);
+  const liveReviews = await getAggregateGoogleReviews(
+    allWineries.map((w) => ({
+      name: w.name,
+      slug: w.slug,
+      address: `${w.address}, ${w.city}, ${w.state} ${w.zip}`,
+    })),
+    3
+  );
 
   return (
     <>
@@ -542,49 +528,40 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-20 wine-gradient text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <h2 className="font-serif text-4xl md:text-5xl font-bold mb-4">
-              What Our Visitors Say
-            </h2>
-            <p className="text-xl text-white/80 max-w-2xl mx-auto">
-              Discover why the Scottsdale Wine Trail has become Arizona&apos;s
-              premier wine destination
-            </p>
-          </div>
+      {/* Testimonials — live Google reviews aggregated across all 6 tasting rooms */}
+      {liveReviews.length > 0 && (
+        <section className="py-20 wine-gradient text-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-14">
+              <h2 className="font-serif text-4xl md:text-5xl font-bold mb-4">
+                What Our Visitors Say
+              </h2>
+              <p className="text-xl text-white/80 max-w-2xl mx-auto">
+                Real reviews from Google, across every tasting room on the
+                Scottsdale Wine Trail.
+              </p>
+            </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {TESTIMONIALS.map((t) => (
-              <div
-                key={t.id}
-                className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20"
-              >
-                <div className="flex text-gold-400 mb-4">
-                  {"★★★★★".split("").map((star, i) => (
-                    <span key={i} className="text-lg">
-                      {star}
-                    </span>
-                  ))}
-                </div>
-                <blockquote className="text-lg italic mb-5 text-white/90 leading-relaxed">
-                  &ldquo;{t.quote}&rdquo;
-                </blockquote>
-                <footer className="flex items-center gap-3">
-                  <div className="w-11 h-11 gold-gradient rounded-full flex items-center justify-center text-sm font-bold text-burgundy-900 shrink-0">
-                    {t.initials}
-                  </div>
-                  <div>
-                    <div className="font-semibold text-sm">{t.name}</div>
-                    <div className="text-white/60 text-xs">{t.location}</div>
-                  </div>
-                </footer>
-              </div>
-            ))}
+            <div className="grid md:grid-cols-3 gap-8 items-start">
+              {liveReviews.map((review, idx) => (
+                <ReviewCard
+                  key={`${review.winerySlug}-${idx}`}
+                  review={review}
+                  variant="dark"
+                  initialClampLines={6}
+                  showWinery
+                />
+              ))}
+            </div>
+
+            {liveReviews.length > 0 && (
+              <p className="text-center text-xs text-white/40 mt-8">
+                Reviews from Google · Click any review to read it on Google
+              </p>
+            )}
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </>
   );
 }

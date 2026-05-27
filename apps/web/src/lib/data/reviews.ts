@@ -1,4 +1,4 @@
-// Google Places (New) integration for winery detail pages.
+// Google Places (New) integration for winery detail pages + home aggregate.
 //
 // Two-step lookup with aggressive caching to keep billing minimal:
 //   1. Text-search the winery name + address once to discover its place_id
@@ -7,7 +7,7 @@
 //      (cached 24 hours)
 //
 // Returns null on missing API key, missing place, or any API error so the
-// detail page can gracefully omit the reviews section.
+// page can gracefully omit the reviews section.
 
 const PLACES_BASE = "https://places.googleapis.com/v1";
 
@@ -27,6 +27,11 @@ export type GoogleReview = {
   text: string;
   relativePublishTime: string;
   publishTime: string;
+  /** Link out to the place's Google Maps page (reviews are scoped to the place, not per-review). */
+  googleUrl: string | null;
+  /** Which winery the review is for (used by the home page aggregator). */
+  wineryName?: string;
+  winerySlug?: string;
 };
 
 export type GooglePlaceSummary = {
@@ -101,6 +106,8 @@ async function fetchPlaceDetails(
       }>;
     };
 
+    const googleMapsUri = data.googleMapsUri ?? null;
+
     const reviews: GoogleReview[] = (data.reviews ?? [])
       .filter((r) => r.text?.text && r.authorAttribution?.displayName)
       .map((r) => ({
@@ -110,13 +117,14 @@ async function fetchPlaceDetails(
         text: r.text!.text!,
         relativePublishTime: r.relativePublishTimeDescription ?? "",
         publishTime: r.publishTime ?? "",
+        googleUrl: googleMapsUri,
       }));
 
     return {
       placeId: data.id,
       rating: data.rating ?? null,
       userRatingCount: data.userRatingCount ?? null,
-      googleMapsUri: data.googleMapsUri ?? null,
+      googleMapsUri,
       reviews,
     };
   } catch {
@@ -131,4 +139,54 @@ export async function getGoogleReviewsForWinery(
   const placeId = await findPlaceId(name, address);
   if (!placeId) return null;
   return fetchPlaceDetails(placeId);
+}
+
+/**
+ * Pick the best reviews to feature publicly:
+ * - Prefer 4+ star reviews (avoid surfacing negative reviews)
+ * - Within that bucket, prefer the most recent
+ * - If fewer than `targetCount` qualify, fall back to 3+ star, then to anything
+ *   so the section is never empty when reviews exist
+ */
+export function selectFriendlyReviews(
+  reviews: GoogleReview[],
+  targetCount: number
+): GoogleReview[] {
+  const byRecency = [...reviews].sort((a, b) =>
+    (b.publishTime || "").localeCompare(a.publishTime || "")
+  );
+
+  const tier1 = byRecency.filter((r) => r.rating >= 4);
+  if (tier1.length >= targetCount) return tier1.slice(0, targetCount);
+
+  const tier2 = byRecency.filter((r) => r.rating >= 3);
+  if (tier2.length >= targetCount) return tier2.slice(0, targetCount);
+
+  return byRecency.slice(0, targetCount);
+}
+
+/**
+ * Aggregate reviews across multiple wineries (for the home page testimonial section).
+ * Fetches in parallel (each call is cached individually). Returns the
+ * most recent positive reviews across all wineries, tagged with which
+ * winery they came from.
+ */
+export async function getAggregateGoogleReviews(
+  wineries: Array<{ name: string; slug: string; address: string }>,
+  targetCount = 3
+): Promise<GoogleReview[]> {
+  const results = await Promise.all(
+    wineries.map(async (w) => {
+      const summary = await getGoogleReviewsForWinery(w.name, w.address);
+      if (!summary) return [];
+      return summary.reviews.map((r) => ({
+        ...r,
+        wineryName: w.name,
+        winerySlug: w.slug,
+      }));
+    })
+  );
+
+  const all = results.flat();
+  return selectFriendlyReviews(all, targetCount);
 }
