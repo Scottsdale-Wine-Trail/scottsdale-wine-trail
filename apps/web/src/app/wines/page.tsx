@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
-import { getWines, getWineries } from "@/lib/data";
+import { getWineries } from "@/lib/data";
+import { CURATED_WINES } from "@/lib/data/curated-wines";
 import { WinesClient } from "@/components/WinesClient";
+
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://scottsdalewinetrail.com";
 
 export const metadata: Metadata = {
   title: "Wines",
@@ -9,10 +13,36 @@ export const metadata: Metadata = {
 };
 
 export default async function WinesPage() {
-  const [wines, wineries] = await Promise.all([getWines(), getWineries()]);
+  const wineries = await getWineries();
+
+  // JSON-LD Product structured data so wines surface in Google Shopping / Search
+  const productLd = CURATED_WINES.map((w) => ({
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    name: `${w.wineryName} ${w.name}`,
+    description: w.description ?? `${w.name} from ${w.wineryName}.`,
+    image: `${SITE_URL}${w.image}`,
+    brand: { "@type": "Brand", name: w.wineryName },
+    category: "Food, Beverages & Tobacco > Beverages > Alcoholic Beverages > Wine",
+    sku: w.slug,
+    ...(w.price !== null && {
+      offers: {
+        "@type": "Offer",
+        priceCurrency: "USD",
+        price: w.price.toFixed(2),
+        availability: "https://schema.org/InStock",
+        url: w.purchaseUrl ?? `${SITE_URL}/wines#${w.slug}`,
+      },
+    }),
+  }));
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productLd) }}
+      />
+
       <div
         className="relative py-24 px-6 -mt-16"
         style={{
@@ -25,12 +55,12 @@ export default async function WinesPage() {
         <div className="max-w-4xl mx-auto text-center text-white pt-16">
           <h1 className="font-serif text-5xl font-bold mb-4">Wines</h1>
           <p className="text-white/80 text-xl max-w-2xl mx-auto">
-            Browse and search wines from every tasting room on the trail.
+            Browse Arizona wines from every tasting room on the trail.
           </p>
         </div>
       </div>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <WinesClient wines={wines} wineries={wineries} />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <WinesClient wines={CURATED_WINES} wineries={wineries} />
       </div>
     </>
   );

@@ -139,3 +139,7 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vercel
 .env*.local
+
+# Reference inputs (raw spreadsheets, extraction intermediates)
+reference/*.xlsx
+reference/_*.json
