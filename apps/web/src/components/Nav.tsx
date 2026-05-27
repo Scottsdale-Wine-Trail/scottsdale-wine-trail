@@ -1,7 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
+
+// Routes that don't have a dark hero behind the nav, so the nav needs to
+// render in its solid (scrolled) variant from the start to stay readable.
+const ALWAYS_SOLID_ROUTES = new Set(["/map", "/trail-map"]);
 
 type NavLink = {
   href: string;
@@ -30,10 +35,17 @@ const passportLink: NavLink = {
 };
 
 export function Nav() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const moreRef = useRef<HTMLLIElement>(null);
+
+  const forceSolid = useMemo(
+    () => ALWAYS_SOLID_ROUTES.has(pathname ?? ""),
+    [pathname]
+  );
+  const solid = scrolled || forceSolid;
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 80);
@@ -57,7 +69,7 @@ export function Nav() {
   return (
     <nav
       className={`fixed top-0 inset-x-0 z-50 h-16 flex items-center px-6 transition-all duration-300 ${
-        scrolled
+        solid
           ? "bg-white/95 backdrop-blur-sm shadow-sm"
           : "bg-transparent"
       }`}
@@ -66,7 +78,7 @@ export function Nav() {
         <Link
           href="/"
           className={`font-serif text-lg font-semibold tracking-wide transition-colors ${
-            scrolled ? "text-burgundy-700" : "text-white"
+            solid ? "text-burgundy-700" : "text-white"
           }`}
           onClick={() => setMenuOpen(false)}
         >
@@ -80,7 +92,7 @@ export function Nav() {
               <Link
                 href={href}
                 className={`text-sm font-medium tracking-wide transition-colors ${
-                  scrolled
+                  solid
                     ? "text-gray-600 hover:text-burgundy-700"
                     : "text-white/90 hover:text-white"
                 }`}
@@ -96,7 +108,7 @@ export function Nav() {
               type="button"
               onClick={() => setMoreOpen((o) => !o)}
               className={`text-sm font-medium tracking-wide transition-colors flex items-center gap-1 ${
-                scrolled
+                solid
                   ? "text-gray-600 hover:text-burgundy-700"
                   : "text-white/90 hover:text-white"
               }`}
@@ -142,7 +154,7 @@ export function Nav() {
             <Link
               href={passportLink.href}
               className={`text-sm font-semibold tracking-wide px-3 py-1.5 rounded-full transition-all ${
-                scrolled
+                solid
                   ? "gold-gradient text-white shadow-sm hover:opacity-90"
                   : "bg-white/20 backdrop-blur-sm text-white border border-white/30 hover:bg-white/30"
               }`}
@@ -159,7 +171,7 @@ export function Nav() {
           aria-label="Toggle menu"
           aria-expanded={menuOpen}
           className={`md:hidden flex flex-col items-center justify-center w-9 h-9 gap-1 rounded-lg ${
-            scrolled
+            solid
               ? "text-burgundy-700 hover:bg-gray-100"
               : "text-white hover:bg-white/10"
           }`}
