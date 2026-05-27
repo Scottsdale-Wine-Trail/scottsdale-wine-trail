@@ -27,7 +27,9 @@ export function WineryCard({ winery }: { winery: Winery }) {
         />
       ) : (
         <div className="w-full h-56 wine-gradient flex items-center justify-center">
-          <span className="font-serif text-4xl text-white/30">🍷</span>
+          <span className="font-serif text-5xl text-white/40 font-bold">
+            {winery.name.charAt(0)}
+          </span>
         </div>
       )}
       <div className="p-6">

@@ -4,9 +4,9 @@ import { getWineries } from "@/lib/data";
 import type { Winery } from "@swt/shared";
 
 export const metadata: Metadata = {
-  title: "Digital Passport",
+  title: "Passport",
   description:
-    "Get the Scottsdale Wine Trail Digital Passport app for $5. Visit every tasting room, collect stamps, earn a $2 discount on each flight, and unlock exclusive trail experiences.",
+    "Get the Scottsdale Wine Trail Passport. Available as a paper or digital passport for $5. Visit every tasting room, collect stamps, earn a $2 discount on each flight, and unlock exclusive trail experiences.",
 };
 
 // ─── Static content ───────────────────────────────────────────────────────────
@@ -15,96 +15,94 @@ const STEPS = [
   {
     number: "01",
     title: "Get the Passport",
-    body: "Download the free Scottsdale Wine Trail app on iPhone or Android. Purchase your Digital Passport in-app for just $5 — one time, good for the full trail.",
+    body: "Download the Scottsdale Wine Trail app on iPhone or Android or pick up a paper passport at any tasting room.",
   },
   {
     number: "02",
     title: "Visit Tasting Rooms",
-    body: "Show your digital passport at any participating tasting room. Enjoy a $2 discount on each flight, then check in through the app to earn your stamp.",
+    body: "Show your passport at any participating tasting room to earn your stamp.",
   },
   {
     number: "03",
-    title: "Collect, Share & Earn",
-    body: "Complete the trail and unlock rewards. Leave photos and tasting notes after each visit. The more you explore, the more you earn.",
+    title: "Complete the Trail",
+    body: "Collect a stamp at every participating tasting room to complete the trail and unlock your reward.",
   },
 ];
 
 const BENEFITS = [
   {
-    icon: "📱",
     title: "Always In Your Pocket",
-    body: "Your passport lives in the app — no paper to lose, no card to forget. Available on iPhone and Android.",
+    body: "Choose the format that fits you best. The digital passport lives in the app, with no paper to lose. Prefer paper? Pick one up at any tasting room.",
   },
   {
-    icon: "💰",
     title: "$2 Off Every Flight",
-    body: "Show your digital passport at any participating tasting room to receive $2 off each wine flight. The passport pays for itself after three stops.",
+    body: "Show your passport at any participating tasting room to receive $2 off each wine flight. The passport pays for itself after three stops.",
   },
   {
-    icon: "🗺️",
     title: "Guided Trail Navigation",
-    body: "Built-in maps give you seamless turn-by-turn directions from one tasting room to the next — no searching, no guessing.",
+    body: "The digital passport includes built-in maps with seamless directions from one tasting room to the next, no searching, no guessing.",
   },
   {
-    icon: "📸",
-    title: "Photos & Tasting Notes",
-    body: "The app prompts you to upload photos and leave tasting notes at each stop, creating a personal wine journal of your trail experience.",
+    title: "Trail Reward",
+    body: "Complete the trail to unlock a Scottsdale Wine Trail reward, just for visiting every participating tasting room.",
   },
   {
-    icon: "🎁",
-    title: "Rewards & Exclusives",
-    body: "Complete the trail to unlock rewards and early access to future exclusive offers from participating wineries.",
+    title: "Paper or Digital",
+    body: "Both passports work at every participating tasting room. Buy the digital passport in our mobile app, or purchase a paper passport in person.",
   },
   {
-    icon: "📣",
     title: "Supports the Trail",
-    body: "Passport purchase revenue goes directly back to Scottsdale Wine Trail marketing, helping the trail — and the wineries on it — grow.",
+    body: "Passport purchases support Scottsdale Wine Trail marketing, helping the trail and the wineries on it continue to grow.",
   },
 ];
 
 const APP_FEATURES = [
   {
-    icon: "🍷",
     label: "Get Your Passport",
-    description: "Purchase your passport in-app for $5 and unlock the full trail experience instantly.",
+    description:
+      "Purchase your passport in-app for $5 and unlock the full trail experience instantly.",
     accent: "from-burgundy-900 to-burgundy-700",
   },
   {
-    icon: "📍",
     label: "Stamp My Visit",
-    description: "Check in at each tasting room to collect your stamp and log your wine experience.",
+    description:
+      "Check in at each tasting room to collect your stamp and log your wine experience.",
     accent: "from-[hsl(280,55%,20%)] to-[hsl(280,45%,35%)]",
   },
   {
-    icon: "🗺️",
     label: "Trail Map",
-    description: "Navigate seamlessly between all participating tasting rooms with built-in directions.",
+    description:
+      "Navigate seamlessly between all participating tasting rooms with built-in directions.",
     accent: "from-[hsl(351,67%,22%)] to-[hsl(351,55%,38%)]",
   },
   {
-    icon: "⭐",
     label: "Rewards & Progress",
-    description: "Track your stamps, view your tasting notes, and see what rewards you've unlocked.",
+    description:
+      "Track your stamps, view your tasting notes, and see what rewards you've unlocked.",
     accent: "from-[hsl(35,80%,28%)] to-[hsl(43,100%,40%)]",
   },
 ];
 
 const FAQS = [
   {
-    q: "What is the Digital Passport?",
-    a: "The Scottsdale Wine Trail Digital Passport is a feature inside the free mobile app. For a one-time $5 in-app purchase, you unlock a digital passport that you can use at every participating tasting room on the trail.",
+    q: "What is the Scottsdale Wine Trail Passport?",
+    a: "The Scottsdale Wine Trail Passport is your guide to the trail. Purchase it digitally inside the free mobile app, or pick up a paper passport at any participating tasting room. Either format earns you $2 off each flight and a reward for completing the trail.",
   },
   {
     q: "Is the passport used on mobile only?",
-    a: "Yes — the stamp-collection, check-in, and rewards experience lives entirely in the app. This website is where you discover wineries, plan your visit, and learn about events. Download the app to get your passport.",
+    a: "No, we also offer a paper passport available to pick up in any participating tasting room.",
+  },
+  {
+    q: "How do I get a paper passport?",
+    a: "They are available for purchase at all participating tasting rooms.",
   },
   {
     q: "How do guests collect stamps?",
-    a: "Visit any participating tasting room and show your digital passport to the staff. Check in through the app and your stamp is added automatically. Staff can also help you check in if needed.",
+    a: "Visit any participating tasting room and show your digital or paper passport to the staff. Check in through the app and a staff member will enter the secret code to stamp your passport digitally, or staff can add a physical stamp to your paper passport.",
   },
   {
     q: "What does the passport cost?",
-    a: "The Scottsdale Wine Trail app is free to download. The Digital Passport is a one-time $5 in-app purchase. That's it — no subscriptions, no hidden fees.",
+    a: "Both the digital and physical passports are $5 each, which earns guests $2 off each tasting flight at all 6 stops.",
   },
   {
     q: "Do tasting rooms still offer a flight discount?",
@@ -136,7 +134,9 @@ function WineryPassportCard({ winery }: { winery: Winery }) {
             className="w-full h-full object-cover"
           />
         ) : (
-          <span className="text-xl text-white/50">🍷</span>
+          <span className="font-serif text-xl text-white/60">
+            {winery.name.charAt(0)}
+          </span>
         )}
       </div>
 
@@ -162,7 +162,7 @@ function WineryPassportCard({ winery }: { winery: Winery }) {
 
 export default async function PassportPage() {
   const wineries = await getWineries();
-  const wineCount = wineries.length || 7;
+  const wineCount = wineries.length || 6;
 
   return (
     <>
@@ -188,7 +188,7 @@ export default async function PassportPage() {
 
         <div className="relative text-center text-white px-6 max-w-3xl mx-auto pt-8">
           <span className="inline-block text-xs font-semibold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full border border-gold-400/40 text-gold-300 mb-7">
-            Free App · $5 Passport · Available Now
+            Paper &amp; Digital · $5 Passport · Available Now
           </span>
 
           <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-[1.1]">
@@ -199,9 +199,9 @@ export default async function PassportPage() {
           </h1>
 
           <p className="text-xl text-white/75 leading-relaxed mb-10 max-w-xl mx-auto">
-            The Scottsdale Wine Trail Digital Passport is your mobile guide to
-            seven tasting rooms — complete with stamps, discounts, and rewards,
-            all in one free app.
+            The Scottsdale Wine Trail passport is your guide to six walkable
+            tasting rooms. Purchase your passport digitally through our mobile
+            app or on paper in person at any of our tasting rooms.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -209,7 +209,7 @@ export default async function PassportPage() {
               href="#download"
               className="gold-gradient text-white font-semibold px-9 py-4 rounded-xl text-lg hover:opacity-90 transition-all transform hover:scale-105 shadow-xl"
             >
-              Get the Passport — $5
+              Get the Passport, $5
             </a>
             <Link
               href="/wineries"
@@ -221,7 +221,7 @@ export default async function PassportPage() {
 
           {/* Trust chips */}
           <div className="flex flex-wrap justify-center gap-6 mt-10 text-sm text-white/50">
-            <span>✓ Free to download</span>
+            <span>✓ Paper or digital</span>
             <span>✓ $2 off every flight</span>
             <span>✓ {wineCount} participating wineries</span>
           </div>
@@ -236,7 +236,7 @@ export default async function PassportPage() {
               How It Works
             </h2>
             <p className="text-xl text-gray-500 max-w-xl mx-auto">
-              From download to your first stamp in three easy steps
+              From pickup to your first stamp in three easy steps
             </p>
           </div>
 
@@ -271,7 +271,7 @@ export default async function PassportPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="font-serif text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Everything Included
+              Fully Curated App Experience
             </h2>
             <p className="text-xl text-gray-500 max-w-xl mx-auto">
               One $5 passport unlocks the complete trail experience
@@ -284,7 +284,6 @@ export default async function PassportPage() {
                 key={b.title}
                 className="card-hover-effect group bg-cream rounded-2xl p-7 border border-gray-100"
               >
-                <div className="text-4xl mb-5">{b.icon}</div>
                 <h3 className="font-serif text-lg font-semibold text-gray-900 mb-2">
                   {b.title}
                 </h3>
@@ -322,7 +321,6 @@ export default async function PassportPage() {
                   className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${f.accent} opacity-80`}
                   aria-hidden="true"
                 />
-                <div className="text-4xl mb-5">{f.icon}</div>
                 <h3 className="font-serif text-lg font-semibold text-white mb-2">
                   {f.label}
                 </h3>
@@ -346,31 +344,35 @@ export default async function PassportPage() {
                     My Passport
                   </p>
                   <p className="font-serif text-white text-center text-sm">
-                    5 of {wineCount} stamps
+                    {Math.min(5, wineCount)} of {wineCount} stamps
                   </p>
                   <div className="grid grid-cols-3 gap-1.5 flex-1">
                     {Array.from({ length: wineCount }).map((_, i) => (
                       <div
                         key={i}
-                        className={`rounded-lg aspect-square flex items-center justify-center text-sm border ${
+                        className={`rounded-lg aspect-square flex items-center justify-center text-xs font-serif font-bold border ${
                           i < 5
                             ? "bg-gold-400/25 border-gold-400/50 text-gold-300"
                             : "bg-white/5 border-white/10 text-white/15"
                         }`}
                       >
-                        {i < 5 ? "🍷" : "·"}
+                        {i < 5 ? "✓" : "·"}
                       </div>
                     ))}
                   </div>
                   <div>
                     <div className="flex justify-between text-xs text-white/40 mb-1.5">
                       <span>Trail progress</span>
-                      <span>{Math.round((5 / wineCount) * 100)}%</span>
+                      <span>
+                        {Math.round((Math.min(5, wineCount) / wineCount) * 100)}%
+                      </span>
                     </div>
                     <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
                       <div
                         className="h-full gold-gradient rounded-full"
-                        style={{ width: `${Math.round((5 / wineCount) * 100)}%` }}
+                        style={{
+                          width: `${Math.round((Math.min(5, wineCount) / wineCount) * 100)}%`,
+                        }}
                       />
                     </div>
                   </div>
@@ -451,8 +453,8 @@ export default async function PassportPage() {
 
           <p className="text-center text-sm text-gray-400 mt-10">
             Still have questions?{" "}
-            <Link href="/wineries" className="text-burgundy-600 hover:underline">
-              Contact a participating winery
+            <Link href="/concierge" className="text-burgundy-600 hover:underline">
+              Contact the concierge
             </Link>
           </p>
         </div>
@@ -463,19 +465,21 @@ export default async function PassportPage() {
         <div className="max-w-4xl mx-auto px-4 text-center">
           {/* Icon */}
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl wine-gradient shadow-xl mb-8">
-            <span className="text-4xl">🍷</span>
+            <span className="font-serif text-3xl text-white font-bold">
+              SWT
+            </span>
           </div>
 
           <h2 className="font-serif text-4xl md:text-5xl font-bold text-gray-900 mb-5 leading-tight">
             Your Trail Awaits.
           </h2>
           <p className="text-xl text-gray-500 max-w-2xl mx-auto mb-3 leading-relaxed">
-            Download the free Scottsdale Wine Trail app, get your $5 Digital
-            Passport, and start collecting stamps — your first flight discount
-            is waiting at the door.
+            Download the free Scottsdale Wine Trail app for your $5 digital
+            passport, or pick up a paper passport at any tasting room, and start
+            collecting stamps.
           </p>
           <p className="text-sm text-gray-400 mb-10">
-            Free app · $5 one-time passport · $2 off every flight · No subscription
+            Free app · $5 passport · $2 off every flight · No subscription
           </p>
 
           {/* App store buttons */}

@@ -7,17 +7,15 @@ import type { Winery } from "@swt/shared";
 // ─── Trail helpers ─────────────────────────────────────────────────────────────
 
 // Geographic south-to-north walking order through Old Town Scottsdale.
-// Aridus (E Main St) → Wine Collective (N Scottsdale Rd) → Marshall Way cluster
-// (Carlson Creek → Los Milics → Arizona Stronghold) → Stetson Dr (Salvatore → LDV)
-// Matches the official trail map. Easy to move to a DB `trail_order` column later.
+// Aridus (E Main St) -> Wine Collective (N Scottsdale Rd) -> Marshall Way cluster
+// (Carlson Creek -> Los Milics) -> Stetson Dr (Salvatore -> LDV)
 const TRAIL_NAME_ORDER = [
-  "Aridus",             // 33.4928 — 7173 E Main St (southernmost)
-  "Wine Collective",    // 33.4943 — 4020 N Scottsdale Rd
-  "Carlson Creek",      // 33.4957 — 4142 N Marshall Way
-  "Los Milics",         // 33.4959 — 4151 N Marshall Way (next door)
-  "Arizona Stronghold", // 33.4972 — 4225 N Marshall Way
-  "Salvatore",          // 33.4983 — 7064 E 5th Ave
-  "LDV",                // 33.4995 — 7134 E Stetson Dr (northernmost)
+  "Aridus",          // 33.4928, 7173 E Main St (southernmost)
+  "Wine Collective", // 33.4943, 4020 N Scottsdale Rd
+  "Carlson Creek",   // 33.4957, 4142 N Marshall Way
+  "Los Milics",      // 33.4959, 4151 N Marshall Way (next door)
+  "Salvatore",       // 33.4983, 7064 E 5th Ave
+  "LDV",             // 33.4995, 7134 E Stetson Dr (northernmost)
 ];
 
 function defaultTrailIndex(w: Winery): number {
@@ -30,7 +28,7 @@ function sortedByTrail(wineries: Winery[]): Winery[] {
   return [...wineries].sort((a, b) => defaultTrailIndex(a) - defaultTrailIndex(b));
 }
 
-// Haversine distance in metres — accurate enough for walking distances.
+// Haversine distance in metres, accurate enough for walking distances.
 function haversineM(
   lat1: number, lng1: number,
   lat2: number, lng2: number
@@ -96,9 +94,9 @@ export function WineriesMapClient({ wineries }: { wineries: Winery[] }) {
 
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef         = useRef<import("mapbox-gl").Map | null>(null);
-  // marker root elements — for colour/scale updates
+  // marker root elements, for colour/scale updates
   const markerEls  = useRef<Map<string, HTMLElement>>(new Map());
-  // number spans — for re-labelling when order changes
+  // number spans, for re-labelling when order changes
   const markerNums = useRef<Map<string, HTMLSpanElement>>(new Map());
   // user-location marker element
   const userMarkerRef = useRef<import("mapbox-gl").Marker | null>(null);
@@ -166,7 +164,7 @@ export function WineriesMapClient({ wineries }: { wineries: Winery[] }) {
       map.on("load", () => {
         if (!mounted) return;
 
-        // Trail line source — data updated separately when order changes
+        // Trail line source, data updated separately when order changes
         map.addSource("trail", {
           type: "geojson",
           data: {
@@ -187,7 +185,7 @@ export function WineriesMapClient({ wineries }: { wineries: Winery[] }) {
           },
         });
 
-        // Numbered markers — placed once at winery coords
+        // Numbered markers, placed once at winery coords
         // Numbers are updated via markerNums refs when order changes
         const snap = sortedByTrail(wineries); // initial order for placement
         snap.forEach((winery, idx) => {
@@ -225,7 +223,7 @@ export function WineriesMapClient({ wineries }: { wineries: Winery[] }) {
       });
     }
 
-    // Load Mapbox GL JS + CSS from CDN — avoids the UMD/ESM conflict that
+    // Load Mapbox GL JS + CSS from CDN, avoids the UMD/ESM conflict that
     // causes the npm package's dynamic import to silently fail in webpack.
     const MAPBOX_VERSION = "3.9.3";
     const CDN = `https://api.mapbox.com/mapbox-gl-js/v${MAPBOX_VERSION}`;
@@ -246,7 +244,7 @@ export function WineriesMapClient({ wineries }: { wineries: Winery[] }) {
       script.onload = initMap;
       document.head.appendChild(script);
     } else {
-      // Script tag already injected by a previous render — wait for it
+      // Script tag already injected by a previous render, wait for it
       document
         .querySelector('script[src*="mapbox-gl"]')
         ?.addEventListener("load", initMap);
@@ -432,7 +430,7 @@ export function WineriesMapClient({ wineries }: { wineries: Winery[] }) {
                 disabled={optimizing}
                 className="shrink-0 text-xs font-semibold text-white wine-gradient px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-60 whitespace-nowrap"
               >
-                {optimizing ? "Locating…" : "📍 Optimise Route"}
+                {optimizing ? "Locating…" : "Optimise Route"}
               </button>
             )}
           </div>
@@ -487,7 +485,6 @@ export function WineriesMapClient({ wineries }: { wineries: Winery[] }) {
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 wine-gradient text-white font-semibold text-sm px-4 py-2.5 rounded-xl hover:opacity-90 transition-opacity shadow-sm"
                 >
-                  <span>🚶</span>
                   Walk to {nextWinery.name.split(" ").slice(0, 2).join(" ")}
                   {(() => {
                     const t = walkMinutes(activeWinery, nextWinery);
@@ -500,7 +497,7 @@ export function WineriesMapClient({ wineries }: { wineries: Winery[] }) {
               {isLast && (
                 <div className="text-center py-1.5">
                   <p className="text-xs font-semibold text-burgundy-600 mb-1.5">
-                    🎉 End of Trail — you&apos;ve visited them all!
+                    End of Trail, you&apos;ve visited them all!
                   </p>
                   <button
                     type="button"
@@ -518,7 +515,6 @@ export function WineriesMapClient({ wineries }: { wineries: Winery[] }) {
                 onClick={handleDirectionsHere}
                 className="flex items-center justify-center gap-2 border border-gray-200 text-gray-600 font-medium text-sm px-4 py-2 rounded-xl hover:bg-gray-50 transition-colors"
               >
-                <span>📍</span>
                 {userCoords ? "Walk Here from My Location" : "Directions from My Location"}
               </button>
 
@@ -599,7 +595,6 @@ export function WineriesMapClient({ wineries }: { wineries: Winery[] }) {
       <section className="flex-1 relative order-1 md:order-2 min-h-[45vh] md:min-h-0">
         {!token ? (
           <div className="h-full flex flex-col items-center justify-center bg-cream text-center px-8 gap-5">
-            <div className="text-5xl">🗺️</div>
             <div>
               <h2 className="font-serif text-xl font-bold text-gray-900 mb-2">Map Unavailable</h2>
               <p className="text-gray-500 text-sm max-w-xs leading-relaxed">
@@ -646,7 +641,7 @@ export function WineriesMapClient({ wineries }: { wineries: Winery[] }) {
                     rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2 wine-gradient text-white font-semibold text-sm px-4 py-2.5 rounded-xl hover:opacity-90 mt-1"
                   >
-                    🚶 Walk to {nextWinery.name.split(" ").slice(0, 2).join(" ")}
+                    Walk to {nextWinery.name.split(" ").slice(0, 2).join(" ")}
                     {(() => {
                       const t = walkMinutes(activeWinery, nextWinery);
                       return t ? <span className="opacity-75 font-normal">· {t}</span> : null;
@@ -654,7 +649,7 @@ export function WineriesMapClient({ wineries }: { wineries: Winery[] }) {
                   </a>
                 ) : isLast ? (
                   <p className="text-xs text-burgundy-600 font-semibold text-center mt-1">
-                    🎉 End of trail — well done!
+                    End of trail, well done!
                   </p>
                 ) : null}
               </div>

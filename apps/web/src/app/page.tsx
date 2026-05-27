@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { getFeaturedWineries, getUpcomingEvents } from "@/lib/data";
+import { getFeaturedWineries } from "@/lib/data";
 import { WineryCard } from "@/components/WineryCard";
-import { EventCard } from "@/components/EventCard";
+import { CURATED_EVENTS, TYPE_COLORS } from "@/lib/data/curated-events";
 
 const TESTIMONIALS = [
   {
@@ -23,7 +23,7 @@ const TESTIMONIALS = [
   {
     id: 3,
     quote:
-      "Arizona wine is seriously underrated. The Scottsdale Wine Trail opened my eyes to how world-class our local vintners are.",
+      "The Wine Collective made us feel right at home. Knowledgeable staff, a fantastic Arizona-focused list, and a relaxed atmosphere that turned a quick stop into a long, memorable afternoon.",
     name: "David K.",
     location: "Tempe, AZ",
     initials: "DK",
@@ -31,10 +31,8 @@ const TESTIMONIALS = [
 ];
 
 export default async function HomePage() {
-  const [wineries, events] = await Promise.all([
-    getFeaturedWineries(3),
-    getUpcomingEvents(3),
-  ]);
+  const wineries = await getFeaturedWineries(3);
+  const events = CURATED_EVENTS.slice(0, 3);
 
   return (
     <>
@@ -56,7 +54,7 @@ export default async function HomePage() {
             </span>
           </h1>
           <p className="text-xl md:text-2xl mb-10 font-light leading-relaxed text-white/90">
-            Seven award-winning wineries within walking distance in downtown
+            Six award-winning tasting rooms within walking distance in downtown
             Scottsdale
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -103,7 +101,7 @@ export default async function HomePage() {
               <p className="text-lg text-gray-700 leading-relaxed">
                 This cooperative of wineries united to advance education and
                 exposure for Arizona-produced wines and the growing wine
-                industry statewide. Six of the wineries produce award-winning
+                industry statewide. Five of the wineries produce award-winning
                 wines available for tasting and purchase at unique tasting rooms
                 in the heart of Scottsdale&apos;s entertainment district.
               </p>
@@ -112,12 +110,12 @@ export default async function HomePage() {
                 visitors alike to embrace our thriving Scottsdale wine,
                 culinary, and entertainment scene.&rdquo;
                 <footer className="mt-2 not-italic font-semibold text-burgundy-600 text-base">
-                  — Peggy Fiandaca, LDV Winery Co-Owner
+                  Peggy Fiandaca, LDV Winery Co-Owner
                 </footer>
               </blockquote>
               <div className="grid grid-cols-3 gap-4 pt-4">
                 {[
-                  { stat: "7", label: "Wineries" },
+                  { stat: "6", label: "Tasting Rooms" },
                   { stat: "100+", label: "Award-Winning Wines" },
                   { stat: "1", label: "Historic District" },
                 ].map(({ stat, label }) => (
@@ -184,7 +182,39 @@ export default async function HomePage() {
           {events.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
               {events.map((event) => (
-                <EventCard key={event.id} event={event} />
+                <article
+                  key={event.id}
+                  className="card-hover-effect bg-gradient-to-br from-white to-cream border border-gold-100 rounded-2xl overflow-hidden shadow-md p-6 flex flex-col"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <span
+                      className={`text-xs font-semibold px-3 py-1 rounded-full border ${
+                        TYPE_COLORS[event.type] ??
+                        "bg-gray-50 text-gray-600 border-gray-200"
+                      }`}
+                    >
+                      {event.type}
+                    </span>
+                    <span className="text-xs text-gray-400 font-medium">
+                      {event.schedule.split(" · ")[0]}
+                    </span>
+                  </div>
+                  <h3 className="font-serif text-xl font-semibold text-gray-900 mb-1 leading-snug">
+                    {event.title}
+                  </h3>
+                  <p className="text-xs text-gray-500 mb-3">{event.venue}</p>
+                  <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 flex-1">
+                    {event.body[0]}
+                  </p>
+                  <div className="mt-4">
+                    <Link
+                      href="/events"
+                      className="text-sm font-medium text-burgundy-600 hover:text-burgundy-800 transition-colors"
+                    >
+                      Learn More &amp; RSVP →
+                    </Link>
+                  </div>
+                </article>
               ))}
             </div>
           ) : (
@@ -230,7 +260,7 @@ export default async function HomePage() {
               {/* Text */}
               <div className="text-white">
                 <span className="inline-block text-xs font-semibold tracking-[0.2em] uppercase px-3 py-1.5 rounded-full border border-gold-400/40 text-gold-300 mb-5">
-                  Digital Passport · Free App · $5
+                  Paper &amp; Digital Passport · $5
                 </span>
                 <h2 className="font-serif text-4xl md:text-5xl font-bold mb-5 leading-tight">
                   Collect Stamps.
@@ -238,12 +268,14 @@ export default async function HomePage() {
                   <span style={{ color: "hsl(43,100%,65%)" }}>Earn Rewards.</span>
                 </h2>
                 <p className="text-white/75 text-lg leading-relaxed mb-4">
-                  The Scottsdale Wine Trail Digital Passport is your mobile
-                  companion for the full trail experience — $2 off every flight,
-                  guided navigation, and rewards for completing the trail.
+                  The Scottsdale Wine Trail offers a paper and digital passport
+                  for a full trail experience. Both offer $2 off every flight
+                  and a reward for completing the trail. The digital passport
+                  available via our mobile app offers guided navigation.
                 </p>
                 <p className="text-white/50 text-sm mb-8">
-                  Available on iPhone &amp; Android · One-time $5 in-app purchase
+                  Available on iPhone &amp; Android, or pick up a paper passport
+                  at any tasting room
                 </p>
                 <Link
                   href="/passport"
@@ -261,13 +293,13 @@ export default async function HomePage() {
                     {Array.from({ length: 9 }).map((_, i) => (
                       <div
                         key={i}
-                        className={`rounded-xl flex items-center justify-center text-xl border transition-all ${
+                        className={`rounded-xl flex items-center justify-center text-xs font-serif font-bold border transition-all ${
                           i < 5
                             ? "bg-gold-400/20 border-gold-400/50 text-gold-300"
                             : "bg-white/5 border-white/10 text-white/20"
                         }`}
                       >
-                        {i < 5 ? "🍷" : "·"}
+                        {i < 5 ? "✓" : "·"}
                       </div>
                     ))}
                   </div>
