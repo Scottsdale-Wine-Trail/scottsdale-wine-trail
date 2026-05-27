@@ -3,6 +3,122 @@ import { getFeaturedWineries } from "@/lib/data";
 import { WineryCard } from "@/components/WineryCard";
 import { CURATED_EVENTS, TYPE_COLORS } from "@/lib/data/curated-events";
 
+// Six wine motifs for the passport stamps. Each renders inside a 100x100
+// SVG between roughly y=37 and y=63 (the area between the stamp crossbars).
+const STAMP_MOTIFS: { label: string; node: React.ReactNode }[] = [
+  {
+    label: "Wine Glass",
+    node: (
+      <g
+        stroke="hsla(43, 95%, 86%, 0.92)"
+        strokeWidth="2.2"
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M 40 39 L 50 54 L 60 39" />
+        <line x1="50" y1="54" x2="50" y2="62" />
+        <line x1="43" y1="62" x2="57" y2="62" />
+      </g>
+    ),
+  },
+  {
+    label: "Grape Cluster",
+    node: (
+      <g fill="hsla(43, 95%, 86%, 0.88)">
+        {/* tiny stem on top */}
+        <path
+          d="M 50 36 L 50 40"
+          stroke="hsla(43, 95%, 86%, 0.88)"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+        />
+        {/* triangle bunch */}
+        <circle cx="45" cy="42" r="2.7" />
+        <circle cx="55" cy="42" r="2.7" />
+        <circle cx="40" cy="47.5" r="2.7" />
+        <circle cx="50" cy="47.5" r="2.7" />
+        <circle cx="60" cy="47.5" r="2.7" />
+        <circle cx="45" cy="53" r="2.7" />
+        <circle cx="55" cy="53" r="2.7" />
+        <circle cx="50" cy="58.5" r="2.7" />
+      </g>
+    ),
+  },
+  {
+    label: "Wine Bottle",
+    node: (
+      <g
+        stroke="hsla(43, 95%, 86%, 0.92)"
+        strokeWidth="2.2"
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M 47 37 L 47 44 Q 47 46.5 45 48 L 44 49.5 Q 43 51 43 53 L 43 63 L 57 63 L 57 53 Q 57 51 56 49.5 L 55 48 Q 53 46.5 53 44 L 53 37 Z" />
+        {/* label band */}
+        <line x1="44" y1="55" x2="56" y2="55" strokeWidth="1.1" />
+      </g>
+    ),
+  },
+  {
+    label: "Grape Leaf",
+    node: (
+      <g
+        stroke="hsla(43, 95%, 86%, 0.92)"
+        strokeWidth="2"
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        {/* leaf outline (5-lobed silhouette) */}
+        <path d="M 50 37 C 56 37 60 41 60 45 C 64 45 64 51 60 52 C 62 55 60 59 56 59 C 55 62 50 62 50 62 C 50 62 45 62 44 59 C 40 59 38 55 40 52 C 36 51 36 45 40 45 C 40 41 44 37 50 37 Z" />
+        {/* center vein */}
+        <line x1="50" y1="38" x2="50" y2="62" strokeWidth="1.4" />
+      </g>
+    ),
+  },
+  {
+    label: "Wine Barrel",
+    node: (
+      <g
+        stroke="hsla(43, 95%, 86%, 0.92)"
+        strokeWidth="2.2"
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        {/* barrel body — curved top and bottom */}
+        <path d="M 38 41 Q 35 50 38 59 L 62 59 Q 65 50 62 41 Z" />
+        {/* hoops */}
+        <line x1="37.2" y1="45.5" x2="62.8" y2="45.5" strokeWidth="1.4" />
+        <line x1="37.2" y1="54.5" x2="62.8" y2="54.5" strokeWidth="1.4" />
+      </g>
+    ),
+  },
+  {
+    label: "Corkscrew",
+    node: (
+      <g
+        stroke="hsla(43, 95%, 86%, 0.92)"
+        strokeWidth="2"
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        {/* handle */}
+        <line x1="43" y1="39" x2="57" y2="39" />
+        {/* shaft top */}
+        <line x1="50" y1="39" x2="50" y2="43" />
+        {/* spiral */}
+        <path d="M 50 43 C 55 45 45 48 50 50 C 55 52 45 55 50 57 C 53 58 50 60 50 61" />
+        {/* point */}
+        <line x1="48" y1="61" x2="52" y2="61" strokeWidth="1.4" />
+      </g>
+    ),
+  },
+];
+
 const TESTIMONIALS = [
   {
     id: 1,
@@ -401,18 +517,8 @@ export default async function HomePage() {
                                     >
                                       SWT
                                     </text>
-                                    {/* Centre numeral */}
-                                    <text
-                                      x="50"
-                                      y="60"
-                                      textAnchor="middle"
-                                      fontFamily="'Playfair Display', Georgia, serif"
-                                      fontSize="24"
-                                      fontWeight="700"
-                                      fill="hsla(43, 95%, 86%, 0.95)"
-                                    >
-                                      {i + 1}
-                                    </text>
+                                    {/* Centre motif (wine glass, grapes, bottle, leaf, barrel, corkscrew) */}
+                                    {STAMP_MOTIFS[i]?.node}
                                     {/* Bottom mark */}
                                     <text
                                       x="50"
@@ -430,28 +536,19 @@ export default async function HomePage() {
                                 ) : (
                                   <svg
                                     viewBox="0 0 100 100"
-                                    className="w-full h-full opacity-40"
+                                    className="w-full h-full"
                                   >
                                     <circle
                                       cx="50"
                                       cy="50"
                                       r="44"
                                       fill="none"
-                                      stroke="rgba(255,255,255,0.30)"
+                                      stroke="rgba(255,255,255,0.22)"
                                       strokeWidth="1.4"
                                       strokeDasharray="3 3.5"
                                     />
-                                    <text
-                                      x="50"
-                                      y="56"
-                                      textAnchor="middle"
-                                      fontFamily="'Playfair Display', Georgia, serif"
-                                      fontSize="16"
-                                      fontWeight="600"
-                                      fill="rgba(255,255,255,0.25)"
-                                    >
-                                      {i + 1}
-                                    </text>
+                                    {/* Faded preview of the motif waiting for a stamp */}
+                                    <g opacity="0.22">{STAMP_MOTIFS[i]?.node}</g>
                                   </svg>
                                 )}
                               </div>
