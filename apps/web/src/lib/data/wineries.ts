@@ -19,11 +19,15 @@ const WINERY_DESCRIPTION_OVERRIDES: Record<string, string> = {
 };
 
 function applyOverrides(winery: Winery): Winery {
-  const override = WINERY_DESCRIPTION_OVERRIDES[winery.slug];
-  if (override) {
-    return { ...winery, description: override };
+  const next = { ...winery };
+  const descriptionOverride = WINERY_DESCRIPTION_OVERRIDES[winery.slug];
+  if (descriptionOverride) {
+    next.description = descriptionOverride;
   }
-  return winery;
+  if (!next.hero_image_url) {
+    next.hero_image_url = `/images/wineries/${winery.slug}.jpg`;
+  }
+  return next;
 }
 
 function filterAndDecorate(wineries: Winery[]): Winery[] {
