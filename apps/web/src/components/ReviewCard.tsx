@@ -1,8 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { GoogleReview } from "@/lib/data/reviews";
 import { ReviewerAvatar } from "./ReviewerAvatar";
+
+// useLayoutEffect throws a warning on SSR; this hook silently falls back to
+// useEffect on the server so the build is clean.
+const useIsoLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 function Stars({
   value,
@@ -98,8 +103,24 @@ export function ReviewCard({
   showWinery?: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const [overflows, setOverflows] = useState(false);
+  const textRef = useRef<HTMLParagraphElement>(null);
   const v = VARIANT_CLASSES[variant];
-  const isLong = review.text.length > 240;
+
+  // Measure whether the clamped text is actually overflowing. This is the
+  // only reliable signal — char-length heuristics fire false positives when
+  // a review has line breaks or is just a bit over the threshold.
+  useIsoLayoutEffect(() => {
+    function measure() {
+      const el = textRef.current;
+      if (!el) return;
+      const isOverflowing = el.scrollHeight - el.clientHeight > 1;
+      setOverflows(isOverflowing);
+    }
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [review.text, initialClampLines]);
 
   function toggle(e: React.MouseEvent) {
     // Toggling expand should not navigate away.
@@ -132,9 +153,10 @@ export function ReviewCard({
       </div>
 
       <p
+        ref={textRef}
         className={`${v.body} whitespace-pre-line`}
         style={
-          !expanded && isLong
+          !expanded
             ? {
                 display: "-webkit-box",
                 WebkitLineClamp: initialClampLines,
@@ -147,7 +169,7 @@ export function ReviewCard({
         {review.text}
       </p>
 
-      {isLong && (
+      {(overflows || expanded) && (
         <button
           type="button"
           onClick={toggle}
