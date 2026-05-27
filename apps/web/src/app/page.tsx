@@ -296,30 +296,98 @@ export default async function HomePage() {
                 </Link>
               </div>
 
-              {/* Stamp grid visual */}
-              <div className="flex justify-center">
-                <div className="relative w-60 h-60">
-                  <div className="absolute inset-0 rounded-full border-4 border-dashed border-gold-400/30" />
-                  <div className="absolute inset-7 grid grid-cols-3 grid-rows-3 gap-2.5">
-                    {Array.from({ length: 9 }).map((_, i) => (
+              {/* Passport visual */}
+              {(() => {
+                const TOTAL = 6;
+                const COLLECTED = 4;
+                return (
+                  <div className="flex justify-center">
+                    <div className="relative w-full max-w-sm">
+                      {/* Ambient glow behind */}
                       <div
-                        key={i}
-                        className={`rounded-xl flex items-center justify-center text-xs font-serif font-bold border transition-all ${
-                          i < 5
-                            ? "bg-gold-400/20 border-gold-400/50 text-gold-300"
-                            : "bg-white/5 border-white/10 text-white/20"
-                        }`}
-                      >
-                        {i < 5 ? "✓" : "·"}
+                        className="absolute -inset-6 rounded-3xl opacity-50 blur-3xl pointer-events-none"
+                        style={{
+                          background:
+                            "radial-gradient(circle, hsl(43,100%,55%) 0%, transparent 65%)",
+                        }}
+                        aria-hidden="true"
+                      />
+
+                      {/* Passport page card */}
+                      <div className="relative bg-white/[0.05] backdrop-blur-md border border-white/10 rounded-2xl px-7 py-7 shadow-2xl">
+                        {/* Header rule */}
+                        <div className="flex items-center justify-between mb-6">
+                          <p className="text-[10px] tracking-[0.28em] uppercase text-gold-300/90 font-semibold">
+                            Wine Trail Passport
+                          </p>
+                          <div className="flex items-center gap-1">
+                            <span className="w-1 h-1 rounded-full bg-gold-400/80" />
+                            <span className="w-1 h-1 rounded-full bg-gold-400/80" />
+                            <span className="w-1 h-1 rounded-full bg-gold-400/80" />
+                          </div>
+                        </div>
+
+                        {/* 3 × 2 stamps grid */}
+                        <div className="grid grid-cols-3 gap-3 mb-6">
+                          {Array.from({ length: TOTAL }).map((_, i) => {
+                            const filled = i < COLLECTED;
+                            const tilt = (i % 2 === 0 ? -1 : 1) * 1.5;
+                            return (
+                              <div
+                                key={i}
+                                className={`aspect-square rounded-lg flex items-center justify-center font-serif transition-transform ${
+                                  filled
+                                    ? "border border-gold-400/45 bg-gold-400/[0.12] text-gold-200"
+                                    : "border border-dashed border-white/15 bg-white/[0.02] text-white/20"
+                                }`}
+                                style={
+                                  filled
+                                    ? { transform: `rotate(${tilt}deg)` }
+                                    : undefined
+                                }
+                                aria-hidden="true"
+                              >
+                                {filled ? (
+                                  <span className="text-xl font-bold">
+                                    {i + 1}
+                                  </span>
+                                ) : (
+                                  <span className="text-sm">·</span>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+
+                        {/* Progress */}
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between text-[10px] tracking-[0.2em] uppercase font-semibold">
+                            <span className="text-white/45">Progress</span>
+                            <span className="text-gold-300">
+                              {COLLECTED} of {TOTAL} stamps
+                            </span>
+                          </div>
+                          <div
+                            className="h-[3px] bg-white/8 rounded-full overflow-hidden"
+                            role="progressbar"
+                            aria-valuenow={COLLECTED}
+                            aria-valuemin={0}
+                            aria-valuemax={TOTAL}
+                            aria-label={`${COLLECTED} of ${TOTAL} stamps collected`}
+                          >
+                            <div
+                              className="h-full gold-gradient rounded-full"
+                              style={{
+                                width: `${(COLLECTED / TOTAL) * 100}%`,
+                              }}
+                            />
+                          </div>
+                        </div>
                       </div>
-                    ))}
+                    </div>
                   </div>
-                  {/* Centre label */}
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <span className="sr-only">5 of 9 stamps collected</span>
-                  </div>
-                </div>
-              </div>
+                );
+              })()}
             </div>
           </div>
         </div>
