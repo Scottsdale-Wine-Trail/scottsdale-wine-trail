@@ -7,8 +7,47 @@ import {
   getWineryBySlug,
 } from "@/lib/data";
 import { CURATED_WINES } from "@/lib/data/curated-wines";
+import { getGoogleReviewsForWinery } from "@/lib/data/reviews";
 import { WineryLocationMap } from "@/components/WineryLocationMap";
 import { CopyAddressButton } from "@/components/CopyAddressButton";
+import { ReviewerAvatar } from "@/components/ReviewerAvatar";
+
+function ReviewStars({ value }: { value: number }) {
+  const full = Math.floor(value);
+  const half = value - full >= 0.5;
+  const stars: ("full" | "half" | "empty")[] = [];
+  for (let i = 0; i < 5; i++) {
+    if (i < full) stars.push("full");
+    else if (i === full && half) stars.push("half");
+    else stars.push("empty");
+  }
+  return (
+    <div className="inline-flex items-center gap-0.5" aria-hidden="true">
+      {stars.map((kind, i) => (
+        <svg
+          key={i}
+          viewBox="0 0 20 20"
+          className="w-4 h-4"
+          fill={kind === "empty" ? "none" : "currentColor"}
+          stroke="currentColor"
+          strokeWidth="1"
+          style={{ color: "hsl(43, 100%, 50%)" }}
+        >
+          <defs>
+            <linearGradient id={`half-${i}`}>
+              <stop offset="50%" stopColor="hsl(43, 100%, 50%)" />
+              <stop offset="50%" stopColor="transparent" stopOpacity="1" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M10 1.5l2.6 5.3 5.9.85-4.25 4.15 1 5.85L10 14.9l-5.25 2.75 1-5.85L1.5 7.65l5.9-.85L10 1.5z"
+            fill={kind === "half" ? `url(#half-${i})` : undefined}
+          />
+        </svg>
+      ))}
+    </div>
+  );
+}
 
 type WineryDetailPageProps = {
   params: Promise<{ slug: string }>;
@@ -38,11 +77,14 @@ export default async function WineryDetailPage({ params }: WineryDetailPageProps
     notFound();
   }
 
-  const events = await getUpcomingEventsByWinery(winery.id);
-  const wines = CURATED_WINES.filter((w) => w.winerySlug === winery.slug);
-
   const fullAddress = `${winery.address}, ${winery.city}, ${winery.state} ${winery.zip}`;
   const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`;
+
+  const [events, googleReviews] = await Promise.all([
+    getUpcomingEventsByWinery(winery.id),
+    getGoogleReviewsForWinery(winery.name, fullAddress),
+  ]);
+  const wines = CURATED_WINES.filter((w) => w.winerySlug === winery.slug);
 
   return (
     <>
@@ -195,6 +237,75 @@ export default async function WineryDetailPage({ params }: WineryDetailPageProps
                       </div>
                     </a>
                   ))}
+                </div>
+              </section>
+            )}
+
+            {googleReviews && googleReviews.reviews.length > 0 && (
+              <section>
+                <h2 className="font-serif text-2xl font-semibold text-gray-900 mb-3">
+                  Guest Reviews
+                </h2>
+                <div className="flex items-center gap-3 mb-4">
+                  {googleReviews.rating !== null && (
+                    <>
+                      <span className="text-2xl font-serif font-bold text-gray-900">
+                        {googleReviews.rating.toFixed(1)}
+                      </span>
+                      <ReviewStars value={googleReviews.rating} />
+                    </>
+                  )}
+                  {googleReviews.userRatingCount !== null && (
+                    <span className="text-sm text-gray-400 mt-0.5">
+                      {googleReviews.userRatingCount.toLocaleString()} reviews on Google
+                    </span>
+                  )}
+                </div>
+                <div className="space-y-3">
+                  {googleReviews.reviews.slice(0, 4).map((review, idx) => (
+                    <div
+                      key={idx}
+                      className="border border-gray-100 rounded-xl p-4 bg-white shadow-sm"
+                    >
+                      <div className="flex items-start gap-3 mb-2">
+                        <ReviewerAvatar
+                          name={review.authorName}
+                          photoUrl={review.authorPhotoUrl}
+                        />
+                        <div className="min-w-0 flex-1">
+                          <p className="font-semibold text-gray-900 text-sm leading-snug">
+                            {review.authorName}
+                          </p>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            <ReviewStars value={review.rating} />
+                            {review.relativePublishTime && (
+                              <span className="text-xs text-gray-400">
+                                {review.relativePublishTime}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <p className="text-sm text-gray-700 leading-relaxed line-clamp-5">
+                        {review.text}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex items-center justify-between mt-3">
+                  <span className="text-[11px] text-gray-300">
+                    Reviews from Google
+                  </span>
+                  {googleReviews.googleMapsUri && (
+                    <a
+                      href={googleReviews.googleMapsUri}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-medium text-burgundy-600 hover:text-burgundy-800 transition-colors"
+                    >
+                      See all reviews on Google →
+                    </a>
+                  )}
                 </div>
               </section>
             )}
