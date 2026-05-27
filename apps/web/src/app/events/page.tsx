@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { CURATED_EVENTS, TYPE_COLORS } from "@/lib/data/curated-events";
 
 export const metadata: Metadata = {
@@ -29,53 +30,79 @@ export default function EventsPage() {
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid gap-6">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid gap-8">
           {CURATED_EVENTS.map((event) => (
             <article
               key={event.id}
-              className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow p-7"
+              className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden grid md:grid-cols-[280px_1fr] gap-0"
             >
-              <div className="flex items-start justify-between gap-3 mb-3 flex-wrap">
-                <div>
-                  <h2 className="font-serif text-2xl font-bold text-gray-900 leading-snug">
-                    {event.title}
-                  </h2>
-                  <p className="text-sm text-gray-500 mt-1">{event.venue}</p>
-                  <p className="text-sm font-medium text-burgundy-700 mt-0.5">
-                    {event.schedule}
-                  </p>
-                </div>
-                <span
-                  className={`text-xs font-semibold px-3 py-1 rounded-full border ${
-                    TYPE_COLORS[event.type] ??
-                    "bg-gray-50 text-gray-600 border-gray-200"
-                  }`}
-                >
-                  {event.type}
-                </span>
-              </div>
-
-              <div className="space-y-3 text-gray-700 leading-relaxed text-sm mb-5">
-                {event.body.map((paragraph, idx) => (
-                  <p key={idx}>{paragraph}</p>
-                ))}
-              </div>
-
-              {event.contact && (
-                <p className="text-sm text-gray-500 mb-4">{event.contact}</p>
-              )}
-
-              {event.cta && (
+              {event.image ? (
                 <a
-                  href={event.cta.href}
+                  href={event.image}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block wine-gradient text-white font-semibold px-5 py-2.5 rounded-lg text-sm hover:opacity-90 transition-opacity shadow-sm"
+                  aria-label={`Open ${event.title} flyer in full size`}
+                  className="relative block bg-cream md:aspect-auto aspect-[4/5] group"
                 >
-                  {event.cta.label}
+                  <Image
+                    src={event.image}
+                    alt={`${event.title} event flyer`}
+                    fill
+                    sizes="(min-width:768px) 280px, 100vw"
+                    className="object-cover group-hover:opacity-95 transition-opacity"
+                  />
                 </a>
+              ) : (
+                <div className="bg-cream md:aspect-auto aspect-[4/5] flex items-center justify-center">
+                  <span className="font-serif text-gray-300 text-5xl">
+                    {event.title.charAt(0)}
+                  </span>
+                </div>
               )}
+
+              <div className="p-7 flex flex-col">
+                <div className="flex items-start justify-between gap-3 mb-3 flex-wrap">
+                  <div>
+                    <h2 className="font-serif text-2xl font-bold text-gray-900 leading-snug">
+                      {event.title}
+                    </h2>
+                    <p className="text-sm text-gray-500 mt-1">{event.venue}</p>
+                    <p className="text-sm font-medium text-burgundy-700 mt-0.5">
+                      {event.schedule}
+                    </p>
+                  </div>
+                  <span
+                    className={`text-xs font-semibold px-3 py-1 rounded-full border ${
+                      TYPE_COLORS[event.type] ??
+                      "bg-gray-50 text-gray-600 border-gray-200"
+                    }`}
+                  >
+                    {event.type}
+                  </span>
+                </div>
+
+                <div className="space-y-3 text-gray-700 leading-relaxed text-sm mb-5 flex-1">
+                  {event.body.map((paragraph, idx) => (
+                    <p key={idx}>{paragraph}</p>
+                  ))}
+                </div>
+
+                {event.contact && (
+                  <p className="text-sm text-gray-500 mb-4">{event.contact}</p>
+                )}
+
+                {event.cta && (
+                  <a
+                    href={event.cta.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block self-start wine-gradient text-white font-semibold px-5 py-2.5 rounded-lg text-sm hover:opacity-90 transition-opacity shadow-sm"
+                  >
+                    {event.cta.label}
+                  </a>
+                )}
+              </div>
             </article>
           ))}
         </div>

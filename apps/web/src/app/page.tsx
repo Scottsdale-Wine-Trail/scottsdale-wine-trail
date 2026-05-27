@@ -184,35 +184,46 @@ export default async function HomePage() {
               {events.map((event) => (
                 <article
                   key={event.id}
-                  className="card-hover-effect bg-gradient-to-br from-white to-cream border border-gold-100 rounded-2xl overflow-hidden shadow-md p-6 flex flex-col"
+                  className="card-hover-effect bg-gradient-to-br from-white to-cream border border-gold-100 rounded-2xl overflow-hidden shadow-md flex flex-col"
                 >
-                  <div className="flex items-center justify-between mb-3">
-                    <span
-                      className={`text-xs font-semibold px-3 py-1 rounded-full border ${
-                        TYPE_COLORS[event.type] ??
-                        "bg-gray-50 text-gray-600 border-gray-200"
-                      }`}
-                    >
-                      {event.type}
-                    </span>
-                    <span className="text-xs text-gray-400 font-medium">
-                      {event.schedule.split(" · ")[0]}
-                    </span>
-                  </div>
-                  <h3 className="font-serif text-xl font-semibold text-gray-900 mb-1 leading-snug">
-                    {event.title}
-                  </h3>
-                  <p className="text-xs text-gray-500 mb-3">{event.venue}</p>
-                  <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 flex-1">
-                    {event.body[0]}
-                  </p>
-                  <div className="mt-4">
-                    <Link
-                      href="/events"
-                      className="text-sm font-medium text-burgundy-600 hover:text-burgundy-800 transition-colors"
-                    >
-                      Learn More &amp; RSVP →
-                    </Link>
+                  {event.image && (
+                    <div className="relative w-full aspect-[4/3] bg-cream overflow-hidden">
+                      <img
+                        src={event.image}
+                        alt={`${event.title} flyer`}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                  <div className="p-6 flex flex-col flex-1">
+                    <div className="flex items-center justify-between mb-3">
+                      <span
+                        className={`text-xs font-semibold px-3 py-1 rounded-full border ${
+                          TYPE_COLORS[event.type] ??
+                          "bg-gray-50 text-gray-600 border-gray-200"
+                        }`}
+                      >
+                        {event.type}
+                      </span>
+                      <span className="text-xs text-gray-400 font-medium">
+                        {event.schedule.split(" · ")[0]}
+                      </span>
+                    </div>
+                    <h3 className="font-serif text-xl font-semibold text-gray-900 mb-1 leading-snug">
+                      {event.title}
+                    </h3>
+                    <p className="text-xs text-gray-500 mb-3">{event.venue}</p>
+                    <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 flex-1">
+                      {event.body[0]}
+                    </p>
+                    <div className="mt-4">
+                      <Link
+                        href="/events"
+                        className="text-sm font-medium text-burgundy-600 hover:text-burgundy-800 transition-colors"
+                      >
+                        Learn More &amp; RSVP →
+                      </Link>
+                    </div>
                   </div>
                 </article>
               ))}

@@ -7,6 +7,7 @@ export type CuratedEvent = {
   body: string[];
   cta?: { label: string; href: string };
   contact?: string;
+  image?: string;
 };
 
 export const CURATED_EVENTS: CuratedEvent[] = [
@@ -25,6 +26,7 @@ export const CURATED_EVENTS: CuratedEvent[] = [
       label: "Purchase Tickets",
       href: "https://www.the-wine-collective.com/product/meet-the-maker-dos-cabezas/1117",
     },
+    image: "/images/events/meet-the-maker-dos-cabezas.jpg",
   },
   {
     id: "summer-wine-series-book-club",
@@ -41,6 +43,7 @@ export const CURATED_EVENTS: CuratedEvent[] = [
       label: "RSVP on Meetup",
       href: "https://www.meetup.com/wine-book-club-old-town/events/hnwcxtyjchbbc/?eventOrigin=group_events_list",
     },
+    image: "/images/events/summer-wine-series-book-club.jpg",
   },
   {
     id: "cook-like-a-dame",
@@ -56,6 +59,7 @@ export const CURATED_EVENTS: CuratedEvent[] = [
       label: "Register",
       href: "https://ldeiphoenix.com/cook-like-a-dame/",
     },
+    image: "/images/events/cook-like-a-dame.jpg",
   },
   {
     id: "winemaker-talk-ldv",
@@ -69,6 +73,7 @@ export const CURATED_EVENTS: CuratedEvent[] = [
       "Includes wine, nibbles, and discussion.",
     ],
     contact: "Call 480-664-4822 to register.",
+    image: "/images/events/winemaker-talk-ldv.jpg",
   },
   {
     id: "bottomless-mimosas-aridus",
@@ -79,6 +84,7 @@ export const CURATED_EVENTS: CuratedEvent[] = [
     body: [
       "Settle in at Aridus Wine Co. for bottomless mimosas every Sunday afternoon. A relaxed Old Town tradition perfect for brunch crowds, birthdays, and lazy weekends.",
     ],
+    image: "/images/events/bottomless-mimosas-aridus.jpg",
   },
   {
     id: "aridus-after-hours",
@@ -90,6 +96,7 @@ export const CURATED_EVENTS: CuratedEvent[] = [
       "Pizza, wine, DJ, and games every Friday night at Aridus Wine Co.",
       "Reverse happy hour with extra discounts for members and industry. $5 cover, waived for wine club members and industry.",
     ],
+    image: "/images/events/aridus-after-hours.jpg",
   },
 ];
 
