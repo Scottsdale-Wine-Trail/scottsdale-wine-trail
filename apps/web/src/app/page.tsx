@@ -328,18 +328,15 @@ export default async function HomePage() {
                         </div>
 
                         {/* 3 × 2 stamps grid */}
-                        <div className="grid grid-cols-3 gap-3 mb-6">
+                        <div className="grid grid-cols-3 gap-4 mb-6">
                           {Array.from({ length: TOTAL }).map((_, i) => {
                             const filled = i < COLLECTED;
-                            const tilt = (i % 2 === 0 ? -1 : 1) * 1.5;
+                            // Varied tilt so stamps don't feel mechanically aligned
+                            const tilt = [-4, 3, -2, 5, -3, 2][i] ?? 0;
                             return (
                               <div
                                 key={i}
-                                className={`aspect-square rounded-lg flex items-center justify-center font-serif transition-transform ${
-                                  filled
-                                    ? "border border-gold-400/45 bg-gold-400/[0.12] text-gold-200"
-                                    : "border border-dashed border-white/15 bg-white/[0.02] text-white/20"
-                                }`}
+                                className="aspect-square"
                                 style={
                                   filled
                                     ? { transform: `rotate(${tilt}deg)` }
@@ -348,11 +345,114 @@ export default async function HomePage() {
                                 aria-hidden="true"
                               >
                                 {filled ? (
-                                  <span className="text-xl font-bold">
-                                    {i + 1}
-                                  </span>
+                                  <svg
+                                    viewBox="0 0 100 100"
+                                    className="w-full h-full"
+                                    style={{
+                                      filter:
+                                        "drop-shadow(0 0 1px rgba(255,210,120,0.15))",
+                                    }}
+                                  >
+                                    {/* Outer ring */}
+                                    <circle
+                                      cx="50"
+                                      cy="50"
+                                      r="44"
+                                      fill="hsla(43, 85%, 55%, 0.10)"
+                                      stroke="hsla(43, 90%, 72%, 0.62)"
+                                      strokeWidth="2.4"
+                                    />
+                                    {/* Inner ring */}
+                                    <circle
+                                      cx="50"
+                                      cy="50"
+                                      r="36"
+                                      fill="none"
+                                      stroke="hsla(43, 90%, 72%, 0.38)"
+                                      strokeWidth="0.9"
+                                    />
+                                    {/* Crossbars */}
+                                    <line
+                                      x1="14"
+                                      y1="35"
+                                      x2="86"
+                                      y2="35"
+                                      stroke="hsla(43, 90%, 72%, 0.40)"
+                                      strokeWidth="0.9"
+                                    />
+                                    <line
+                                      x1="14"
+                                      y1="65"
+                                      x2="86"
+                                      y2="65"
+                                      stroke="hsla(43, 90%, 72%, 0.40)"
+                                      strokeWidth="0.9"
+                                    />
+                                    {/* Top crest label */}
+                                    <text
+                                      x="50"
+                                      y="29"
+                                      textAnchor="middle"
+                                      fontFamily="'Playfair Display', Georgia, serif"
+                                      fontSize="9"
+                                      fontWeight="700"
+                                      letterSpacing="2.4"
+                                      fill="hsla(43, 95%, 82%, 0.85)"
+                                    >
+                                      SWT
+                                    </text>
+                                    {/* Centre numeral */}
+                                    <text
+                                      x="50"
+                                      y="60"
+                                      textAnchor="middle"
+                                      fontFamily="'Playfair Display', Georgia, serif"
+                                      fontSize="24"
+                                      fontWeight="700"
+                                      fill="hsla(43, 95%, 86%, 0.95)"
+                                    >
+                                      {i + 1}
+                                    </text>
+                                    {/* Bottom mark */}
+                                    <text
+                                      x="50"
+                                      y="78"
+                                      textAnchor="middle"
+                                      fontFamily="Inter, sans-serif"
+                                      fontSize="6.5"
+                                      fontWeight="600"
+                                      letterSpacing="1.8"
+                                      fill="hsla(43, 95%, 82%, 0.62)"
+                                    >
+                                      VISITED
+                                    </text>
+                                  </svg>
                                 ) : (
-                                  <span className="text-sm">·</span>
+                                  <svg
+                                    viewBox="0 0 100 100"
+                                    className="w-full h-full opacity-40"
+                                  >
+                                    <circle
+                                      cx="50"
+                                      cy="50"
+                                      r="44"
+                                      fill="none"
+                                      stroke="rgba(255,255,255,0.30)"
+                                      strokeWidth="1.4"
+                                      strokeDasharray="3 3.5"
+                                    />
+                                    <text
+                                      x="50"
+                                      y="56"
+                                      textAnchor="middle"
+                                      fontFamily="'Playfair Display', Georgia, serif"
+                                      fontSize="16"
+                                      fontWeight="600"
+                                      fill="rgba(255,255,255,0.25)"
+                                    >
+                                      {i + 1}
+                                    </text>
+                                  </svg>
                                 )}
                               </div>
                             );
