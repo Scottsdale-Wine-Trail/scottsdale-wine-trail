@@ -27,26 +27,26 @@ const STAMP_MOTIFS: { label: string; node: React.ReactNode }[] = [
       <g fill="hsla(43, 95%, 88%, 0.95)">
         {/* small leaf + stem */}
         <path
-          d="M 50 18 L 50 25"
+          d="M 50 24 L 50 31"
           stroke="hsla(43, 95%, 88%, 0.95)"
           strokeWidth="2"
           strokeLinecap="round"
         />
-        <path d="M 50 19 C 60 17 64 22 60 26 C 56 28 52 25 50 22 Z" />
+        <path d="M 50 25 C 60 23 64 28 60 32 C 56 34 52 31 50 28 Z" />
         {/* triangular bunch of berries */}
-        <circle cx="42" cy="32" r="5.5" />
-        <circle cx="50" cy="32" r="5.5" />
-        <circle cx="58" cy="32" r="5.5" />
-        <circle cx="38" cy="41" r="5.5" />
-        <circle cx="46" cy="41" r="5.5" />
-        <circle cx="54" cy="41" r="5.5" />
-        <circle cx="62" cy="41" r="5.5" />
-        <circle cx="42" cy="50" r="5.5" />
-        <circle cx="50" cy="50" r="5.5" />
-        <circle cx="58" cy="50" r="5.5" />
-        <circle cx="46" cy="59" r="5.5" />
-        <circle cx="54" cy="59" r="5.5" />
-        <circle cx="50" cy="68" r="5.5" />
+        <circle cx="42" cy="38" r="5.5" />
+        <circle cx="50" cy="38" r="5.5" />
+        <circle cx="58" cy="38" r="5.5" />
+        <circle cx="38" cy="47" r="5.5" />
+        <circle cx="46" cy="47" r="5.5" />
+        <circle cx="54" cy="47" r="5.5" />
+        <circle cx="62" cy="47" r="5.5" />
+        <circle cx="42" cy="56" r="5.5" />
+        <circle cx="50" cy="56" r="5.5" />
+        <circle cx="58" cy="56" r="5.5" />
+        <circle cx="46" cy="65" r="5.5" />
+        <circle cx="54" cy="65" r="5.5" />
+        <circle cx="50" cy="74" r="5.5" />
       </g>
     ),
   },
