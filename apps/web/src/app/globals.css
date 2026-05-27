@@ -25,13 +25,15 @@ body {
     background-color: hsl(40, 35%, 96%);
     background-image:
       radial-gradient(ellipse 60% 50% at 0% 0%, hsla(43, 85%, 78%, 0.22), transparent 65%),
-      radial-gradient(ellipse 70% 60% at 100% 100%, hsla(351, 55%, 78%, 0.18), transparent 65%);
+      radial-gradient(ellipse 75% 65% at 100% 100%, hsla(351, 55%, 70%, 0.32), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 100% 0%, hsla(351, 45%, 78%, 0.14), transparent 70%);
   }
   .bg-trail-warm {
     background-color: hsl(36, 40%, 94%);
     background-image:
       radial-gradient(ellipse 70% 55% at 100% 0%, hsla(43, 90%, 75%, 0.28), transparent 60%),
-      radial-gradient(ellipse 65% 60% at 0% 100%, hsla(351, 60%, 75%, 0.20), transparent 60%);
+      radial-gradient(ellipse 75% 65% at 0% 100%, hsla(351, 60%, 68%, 0.34), transparent 60%),
+      radial-gradient(ellipse 40% 35% at 50% 0%, hsla(351, 40%, 80%, 0.12), transparent 75%);
   }
   .card-hover-effect {
     transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;

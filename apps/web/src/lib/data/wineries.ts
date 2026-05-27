@@ -3,6 +3,63 @@ import type { Winery } from "@swt/shared";
 
 const EXCLUDED_SLUGS = new Set(["arizona-stronghold-vineyards"]);
 
+// Canonical coordinates and addresses for each tasting room.
+// Overlaid onto whatever's in Supabase so the maps + addresses on the
+// detail pages always show the correct Old Town Scottsdale locations.
+const WINERY_LOCATION_OVERRIDES: Record<
+  string,
+  { lat: number; lng: number; address: string; city: string; state: string; zip: string }
+> = {
+  "aridus-wine-company": {
+    lat: 33.4928431,
+    lng: -111.9267254,
+    address: "7173 E. Main Street",
+    city: "Scottsdale",
+    state: "AZ",
+    zip: "85251",
+  },
+  "the-wine-collective-of-scottsdale": {
+    lat: 33.4943052,
+    lng: -111.9264455,
+    address: "4020 N. Scottsdale Rd. #104",
+    city: "Scottsdale",
+    state: "AZ",
+    zip: "85251",
+  },
+  "carlson-creek-tasting-room": {
+    lat: 33.4956085,
+    lng: -111.9292911,
+    address: "4142 N. Marshall Way",
+    city: "Scottsdale",
+    state: "AZ",
+    zip: "85251",
+  },
+  "los-milics-vineyards": {
+    lat: 33.4959464,
+    lng: -111.9287280,
+    address: "4151 N. Marshall Way",
+    city: "Scottsdale",
+    state: "AZ",
+    zip: "85251",
+  },
+  "salvatore-vineyards-tasting-room": {
+    lat: 33.4982043,
+    lng: -111.9291499,
+    address: "7064 E. 5th Ave",
+    city: "Scottsdale",
+    state: "AZ",
+    zip: "85251",
+  },
+  "ldv-winery-tasting-room": {
+    lat: 33.4994348,
+    lng: -111.9278661,
+    address: "7134 E. Stetson Dr., B-110",
+    city: "Scottsdale",
+    state: "AZ",
+    zip: "85251",
+  },
+};
+
 const WINERY_DESCRIPTION_OVERRIDES: Record<string, string> = {
   "aridus-wine-company":
     "Each bottle of Aridus wine tells a captivating story, encapsulating its own unique character and origin. With every sip, you embark on a journey of discovery, unravelling the layers of complexity and the sheer brilliance that can be found in each carefully crafted bottle. Every drop is a testament to the exceptional quality of grapes that are grown in our renowned eco-friendly winery, where sustainability and excellence come together harmoniously. From vine to bottle, our winemaking process is meticulously executed, ensuring that the distinct flavors and aromas of each grape varietal shine through. Immerse yourself in the world of Aridus wine, and experience the undeniable distinction that sets us apart.",
@@ -26,6 +83,15 @@ function applyOverrides(winery: Winery): Winery {
   }
   if (!next.hero_image_url) {
     next.hero_image_url = `/images/wineries/${winery.slug}.jpg`;
+  }
+  const locationOverride = WINERY_LOCATION_OVERRIDES[winery.slug];
+  if (locationOverride) {
+    next.lat = locationOverride.lat;
+    next.lng = locationOverride.lng;
+    next.address = locationOverride.address;
+    next.city = locationOverride.city;
+    next.state = locationOverride.state;
+    next.zip = locationOverride.zip;
   }
   return next;
 }

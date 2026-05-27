@@ -1,11 +1,12 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import {
   getUpcomingEventsByWinery,
-  getWinesByWinery,
   getWineryBySlug,
 } from "@/lib/data";
+import { CURATED_WINES } from "@/lib/data/curated-wines";
 import { WineryLocationMap } from "@/components/WineryLocationMap";
 import { CopyAddressButton } from "@/components/CopyAddressButton";
 
@@ -37,10 +38,8 @@ export default async function WineryDetailPage({ params }: WineryDetailPageProps
     notFound();
   }
 
-  const [events, wines] = await Promise.all([
-    getUpcomingEventsByWinery(winery.id),
-    getWinesByWinery(winery.id),
-  ]);
+  const events = await getUpcomingEventsByWinery(winery.id);
+  const wines = CURATED_WINES.filter((w) => w.winerySlug === winery.slug);
 
   const fullAddress = `${winery.address}, ${winery.city}, ${winery.state} ${winery.zip}`;
   const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`;
@@ -148,18 +147,53 @@ export default async function WineryDetailPage({ params }: WineryDetailPageProps
 
             {wines.length > 0 && (
               <section>
-                <h2 className="font-serif text-2xl font-semibold text-gray-900 mb-4">
-                  Wines
-                </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="flex items-baseline justify-between mb-4">
+                  <h2 className="font-serif text-2xl font-semibold text-gray-900">
+                    Wines
+                  </h2>
+                  <Link
+                    href="/wines"
+                    className="text-sm font-medium text-burgundy-600 hover:text-burgundy-800 transition-colors"
+                  >
+                    View full catalog →
+                  </Link>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {wines.map((wine) => (
-                    <div
-                      key={wine.id}
-                      className="border border-gray-100 rounded-xl p-4 bg-white shadow-sm"
+                    <a
+                      key={wine.slug}
+                      href={wine.purchaseUrl ?? `/wines#${wine.slug}`}
+                      target={wine.purchaseUrl ? "_blank" : undefined}
+                      rel={wine.purchaseUrl ? "noopener noreferrer" : undefined}
+                      className="group flex flex-col bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
                     >
-                      <p className="font-semibold text-gray-900">{wine.name}</p>
-                      <p className="text-sm text-gray-500 mt-0.5">{wine.varietal}</p>
-                    </div>
+                      <div className="relative aspect-square bg-cream">
+                        <Image
+                          src={wine.image}
+                          alt={`${wine.wineryName} ${wine.name}`}
+                          fill
+                          sizes="(min-width:640px) 200px, 50vw"
+                          className="object-contain p-3 group-hover:scale-[1.03] transition-transform"
+                        />
+                      </div>
+                      <div className="p-3">
+                        <p className="font-semibold text-gray-900 text-sm leading-snug line-clamp-2">
+                          {wine.name}
+                        </p>
+                        <div className="flex items-center justify-between mt-1.5 gap-2">
+                          {wine.color && (
+                            <span className="text-[10px] uppercase tracking-wide text-gold-700 font-semibold">
+                              {wine.color}
+                            </span>
+                          )}
+                          {wine.price !== null && (
+                            <span className="font-serif text-sm font-bold text-burgundy-700">
+                              ${wine.price.toFixed(0)}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </a>
                   ))}
                 </div>
               </section>
