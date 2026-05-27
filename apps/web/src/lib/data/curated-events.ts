@@ -8,6 +8,7 @@ export type CuratedEvent = {
   cta?: { label: string; href: string };
   contact?: string;
   image?: string;
+  imageStyle?: "poster" | "banner";
 };
 
 export const CURATED_EVENTS: CuratedEvent[] = [
@@ -60,6 +61,7 @@ export const CURATED_EVENTS: CuratedEvent[] = [
       href: "https://ldeiphoenix.com/cook-like-a-dame/",
     },
     image: "/images/events/cook-like-a-dame.jpg",
+    imageStyle: "banner",
   },
   {
     id: "winemaker-talk-ldv",

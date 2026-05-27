@@ -32,35 +32,13 @@ export default function EventsPage() {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid gap-8">
-          {CURATED_EVENTS.map((event) => (
-            <article
-              key={event.id}
-              className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden grid md:grid-cols-[280px_1fr] gap-0"
-            >
-              {event.image ? (
-                <a
-                  href={event.image}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Open ${event.title} flyer in full size`}
-                  className="relative block bg-cream md:aspect-auto aspect-[4/5] group"
-                >
-                  <Image
-                    src={event.image}
-                    alt={`${event.title} event flyer`}
-                    fill
-                    sizes="(min-width:768px) 280px, 100vw"
-                    className="object-cover group-hover:opacity-95 transition-opacity"
-                  />
-                </a>
-              ) : (
-                <div className="bg-cream md:aspect-auto aspect-[4/5] flex items-center justify-center">
-                  <span className="font-serif text-gray-300 text-5xl">
-                    {event.title.charAt(0)}
-                  </span>
-                </div>
-              )}
+          {CURATED_EVENTS.map((event) => {
+            const isBanner = event.imageStyle === "banner";
+            const cardClass = isBanner
+              ? "bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col"
+              : "bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden grid md:grid-cols-[280px_1fr] gap-0";
 
+            const bodyContent = (
               <div className="p-7 flex flex-col">
                 <div className="flex items-start justify-between gap-3 mb-3 flex-wrap">
                   <div>
@@ -103,8 +81,58 @@ export default function EventsPage() {
                   </a>
                 )}
               </div>
-            </article>
-          ))}
+            );
+
+            if (isBanner && event.image) {
+              return (
+                <article key={event.id} className={cardClass}>
+                  <a
+                    href={event.image}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Open ${event.title} flyer in full size`}
+                    className="relative block w-full bg-cream group"
+                  >
+                    <img
+                      src={event.image}
+                      alt={`${event.title} event banner`}
+                      className="w-full h-auto object-contain group-hover:opacity-90 transition-opacity"
+                    />
+                  </a>
+                  {bodyContent}
+                </article>
+              );
+            }
+
+            return (
+              <article key={event.id} className={cardClass}>
+                {event.image ? (
+                  <a
+                    href={event.image}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Open ${event.title} flyer in full size`}
+                    className="relative block bg-cream md:aspect-auto aspect-[4/5] group"
+                  >
+                    <Image
+                      src={event.image}
+                      alt={`${event.title} event flyer`}
+                      fill
+                      sizes="(min-width:768px) 280px, 100vw"
+                      className="object-contain p-3 group-hover:opacity-90 transition-opacity"
+                    />
+                  </a>
+                ) : (
+                  <div className="bg-cream md:aspect-auto aspect-[4/5] flex items-center justify-center">
+                    <span className="font-serif text-gray-300 text-5xl">
+                      {event.title.charAt(0)}
+                    </span>
+                  </div>
+                )}
+                {bodyContent}
+              </article>
+            );
+          })}
         </div>
 
         <div className="text-center mt-16">

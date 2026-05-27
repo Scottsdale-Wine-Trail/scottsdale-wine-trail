@@ -191,7 +191,7 @@ export default async function HomePage() {
                       <img
                         src={event.image}
                         alt={`${event.title} flyer`}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain p-2"
                       />
                     </div>
                   )}
