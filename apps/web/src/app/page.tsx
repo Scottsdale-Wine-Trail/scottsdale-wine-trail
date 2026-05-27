@@ -75,7 +75,7 @@ export default async function HomePage() {
       </section>
 
       {/* About */}
-      <section className="py-20 bg-cream">
+      <section className="py-20 bg-trail-soft">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <h2 className="font-serif text-4xl md:text-5xl font-bold text-gray-900 mb-6">
@@ -168,7 +168,7 @@ export default async function HomePage() {
       </section>
 
       {/* Upcoming Events */}
-      <section className="py-20 bg-cream">
+      <section className="py-20 bg-trail-warm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <h2 className="font-serif text-4xl md:text-5xl font-bold text-gray-900 mb-4">

@@ -34,7 +34,7 @@ export default function MerchPage() {
       </section>
 
       {/* Body */}
-      <section className="py-20 bg-cream">
+      <section className="py-20 bg-trail-soft">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-3xl shadow-md border border-gray-100 p-10 md:p-12 text-center">
             <h2 className="font-serif text-3xl font-bold text-gray-900 mb-5">

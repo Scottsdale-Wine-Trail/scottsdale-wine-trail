@@ -40,7 +40,7 @@ export default function ConciergePage() {
       </section>
 
       {/* Helps with */}
-      <section className="py-20 bg-cream">
+      <section className="py-20 bg-trail-soft">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-3xl shadow-md border border-gray-100 p-10 md:p-12">
             <p className="text-lg text-gray-700 leading-relaxed mb-6">

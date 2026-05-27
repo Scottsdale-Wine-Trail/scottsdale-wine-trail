@@ -229,7 +229,7 @@ export default async function PassportPage() {
       </section>
 
       {/* ── How It Works ──────────────────────────────────────────────────── */}
-      <section id="how-it-works" className="py-24 bg-cream">
+      <section id="how-it-works" className="py-24 bg-trail-soft">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="font-serif text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -390,7 +390,7 @@ export default async function PassportPage() {
       </section>
 
       {/* ── Participating Wineries ─────────────────────────────────────────── */}
-      <section className="py-24 bg-cream">
+      <section className="py-24 bg-trail-warm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <h2 className="font-serif text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -461,7 +461,7 @@ export default async function PassportPage() {
       </section>
 
       {/* ── Download CTA ──────────────────────────────────────────────────── */}
-      <section id="download" className="py-24 bg-cream">
+      <section id="download" className="py-24 bg-trail-soft">
         <div className="max-w-4xl mx-auto px-4 text-center">
           {/* Icon */}
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl wine-gradient shadow-xl mb-8">

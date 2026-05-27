@@ -28,9 +28,11 @@ export default async function WineriesPage() {
           </p>
         </div>
       </div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <WineriesClient wineries={wineries} />
-      </div>
+      <section className="bg-trail-soft py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <WineriesClient wineries={wineries} />
+        </div>
+      </section>
     </>
   );
 }

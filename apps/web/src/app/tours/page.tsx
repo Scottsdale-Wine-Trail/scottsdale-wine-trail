@@ -49,7 +49,7 @@ export default function ToursPage() {
       </section>
 
       {/* Intro */}
-      <section className="py-20 bg-cream">
+      <section className="py-20 bg-trail-soft">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 text-lg text-gray-700 leading-relaxed">
           <p>
             Perfect for bachelorette groups, birthdays, corporate outings,
@@ -108,7 +108,7 @@ export default function ToursPage() {
       </section>
 
       {/* What's Included */}
-      <section className="py-20 bg-cream">
+      <section className="py-20 bg-trail-warm">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-8">
             <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
