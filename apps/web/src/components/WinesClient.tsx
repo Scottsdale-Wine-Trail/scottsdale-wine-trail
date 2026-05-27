@@ -28,6 +28,16 @@ export function WinesClient({
   const [search, setSearch] = useState("");
   const [winerySlug, setWinerySlug] = useState<string | null>(null);
   const [color, setColor] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+
+  const toggleExpanded = (slug: string) => {
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(slug)) next.delete(slug);
+      else next.add(slug);
+      return next;
+    });
+  };
 
   const wineryNameBySlug = useMemo(
     () => Object.fromEntries(wineries.map((w) => [w.slug, w.name])),
@@ -168,11 +178,31 @@ export function WinesClient({
                       </span>
                     )}
                   </div>
-                  {wine.description && (
-                    <p className="text-sm text-gray-600 leading-relaxed line-clamp-4 mb-4">
-                      {wine.description}
-                    </p>
-                  )}
+                  {wine.description && (() => {
+                    const isExpanded = expanded.has(wine.slug);
+                    const isLong = wine.description.length > 240;
+                    return (
+                      <div className="mb-4">
+                        <p
+                          className={`text-sm text-gray-600 leading-relaxed whitespace-pre-line ${
+                            !isExpanded && isLong ? "line-clamp-4" : ""
+                          }`}
+                        >
+                          {wine.description}
+                        </p>
+                        {isLong && (
+                          <button
+                            type="button"
+                            onClick={() => toggleExpanded(wine.slug)}
+                            className="mt-1.5 text-xs font-semibold text-burgundy-600 hover:text-burgundy-800 transition-colors"
+                            aria-expanded={isExpanded}
+                          >
+                            {isExpanded ? "Show less" : "Read more"}
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })()}
                   <div className="mt-auto flex items-center justify-between gap-3 pt-2 border-t border-gray-50">
                     {wine.price !== null ? (
                       <span className="font-serif text-xl font-bold text-burgundy-700">
