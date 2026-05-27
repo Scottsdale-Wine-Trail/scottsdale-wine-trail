@@ -60,43 +60,6 @@ const STAMP_MOTIFS: { label: string; node: React.ReactNode }[] = [
     ),
   },
   {
-    label: "Grape Leaf",
-    node: (
-      <g fill="hsla(43, 95%, 88%, 0.95)">
-        {/* 5-lobed grape leaf silhouette */}
-        <path
-          d="M 50 18
-             C 54 22 58 22 62 20
-             C 64 26 68 28 72 28
-             C 70 34 72 38 76 42
-             C 70 44 68 50 70 56
-             C 64 56 60 60 60 66
-             C 56 64 52 66 50 72
-             C 48 66 44 64 40 66
-             C 40 60 36 56 30 56
-             C 32 50 30 44 24 42
-             C 28 38 30 34 28 28
-             C 32 28 36 26 38 20
-             C 42 22 46 22 50 18 Z"
-        />
-        {/* center vein */}
-        <path
-          d="M 50 22 L 50 70"
-          stroke="hsla(280, 40%, 18%, 0.35)"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-        {/* side veins */}
-        <path
-          d="M 50 38 L 36 32 M 50 38 L 64 32 M 50 52 L 32 54 M 50 52 L 68 54"
-          stroke="hsla(280, 40%, 18%, 0.30)"
-          strokeWidth="1.2"
-          strokeLinecap="round"
-        />
-      </g>
-    ),
-  },
-  {
     label: "Wine Barrel",
     node: (
       <g fill="hsla(43, 95%, 88%, 0.95)">
@@ -107,6 +70,23 @@ const STAMP_MOTIFS: { label: string; node: React.ReactNode }[] = [
         <rect x="28" y="61" width="44" height="3" fill="hsla(280, 40%, 18%, 0.45)" />
         {/* center bunghole accent */}
         <circle cx="50" cy="50" r="2.5" fill="hsla(280, 40%, 18%, 0.55)" />
+      </g>
+    ),
+  },
+  {
+    label: "Champagne Flute",
+    node: (
+      <g fill="hsla(43, 95%, 88%, 0.95)">
+        {/* tall narrow flute cup */}
+        <path d="M 42 18 L 42 52 C 42 58 44 62 50 62 C 56 62 58 58 58 52 L 58 18 Z" />
+        {/* stem */}
+        <rect x="48" y="61" width="4" height="16" rx="0.5" />
+        {/* base */}
+        <rect x="38" y="76" width="24" height="4" rx="1" />
+        {/* bubbles */}
+        <circle cx="49" cy="46" r="1.6" fill="hsla(280, 50%, 18%, 0.35)" />
+        <circle cx="52" cy="38" r="1.2" fill="hsla(280, 50%, 18%, 0.35)" />
+        <circle cx="48" cy="30" r="1" fill="hsla(280, 50%, 18%, 0.35)" />
       </g>
     ),
   },
