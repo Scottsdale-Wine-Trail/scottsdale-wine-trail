@@ -35,8 +35,8 @@ export default function EventsPage() {
           {CURATED_EVENTS.map((event) => {
             const isBanner = event.imageStyle === "banner";
             const cardClass = isBanner
-              ? "bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col"
-              : "bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden grid md:grid-cols-[280px_1fr] gap-0";
+              ? "bg-white rounded-2xl border border-gray-100 shadow-lg hover:shadow-2xl transition-shadow duration-300 overflow-hidden flex flex-col"
+              : "bg-white rounded-2xl border border-gray-100 shadow-lg hover:shadow-2xl transition-shadow duration-300 overflow-hidden grid md:grid-cols-[280px_1fr] gap-0";
 
             const bodyContent = (
               <div className="p-7 flex flex-col">
