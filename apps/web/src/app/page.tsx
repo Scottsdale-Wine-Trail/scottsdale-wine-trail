@@ -556,7 +556,7 @@ export default async function HomePage() {
 
             {liveReviews.length > 0 && (
               <p className="text-center text-xs text-white/40 mt-8">
-                Reviews from Google · Click any review to read it on Google
+                Reviews from Google
               </p>
             )}
           </div>
