@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git push *)",
+      "Bash(gh auth *)",
+      "Bash(curl -s \"https://api.github.com/repos/Scottsdale-Wine-Trail/scottsdale-wine-trail/commits/0077e9c/status\")",
+      "Bash(git fetch *)",
+      "Bash(curl -sI https://scottsdalewinetrail.com/)",
+      "Bash(curl -sI https://www.scottsdalewinetrail.com/)",
+      "Bash(curl -s https://www.scottsdalewinetrail.com/)",
+      "Bash(/usr/bin/curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"https://scottsdale-wine-trail-web-staging.vercel.app/concierge\" --max-time 10)",
+      "Bash(/usr/bin/curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"https://scottsdale-wine-trail-web-staging.vercel.app/tours\" --max-time 10)",
+      "Bash(/usr/bin/curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"https://scottsdale-wine-trail-web-staging.vercel.app/blog\" --max-time 10)",
+      "Bash(/usr/bin/curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"https://scottsdale-wine-trail-web-staging.vercel.app/merch\" --max-time 10)",
+      "Bash(git remote *)",
+      "Bash(git ls-tree *)",
+      "Bash(git ls-remote *)",
+      "Bash(/usr/bin/curl -s \"https://api.github.com/users/breeatoomey/repos?per_page=50&sort=updated\" --max-time 10)",
+      "Bash(/usr/bin/curl -s \"https://api.github.com/orgs/Scottsdale-Wine-Trail/repos?per_page=50&sort=updated\" --max-time 10)",
+      "Bash(/usr/bin/curl -s \"https://api.github.com/repos/Scottsdale-Wine-Trail/scottsdale-wine-trail/commits/6ea04e2\" --max-time 10)",
+      "Bash(/usr/bin/curl -s \"https://api.github.com/repos/Scottsdale-Wine-Trail/scottsdale-wine-trail/branches\" --max-time 10)",
+      "Bash(/usr/bin/curl -sI __TRACKED_VAR__/ --max-time 10)",
+      "Bash(/usr/bin/curl -sI https://scottsdale-wine-trail-web-staging-pp4dtsytd.vercel.app/trail-map --max-time 10)",
+      "Bash(grep -oE '<h1[^>]*>[^<]*</h1>|<p class=\"[^\"]*\"[^>]*>[^<]{20,200}</p>')",
+      "Bash(echo \"=== Mar 7 Nav links ===\" *)",
+      "Read(//private/tmp/mar7/**)",
+      "Bash(grep -oE '<h[1-6][^>]*>[^<]+</h[1-6]>|<p[^>]*>[^<]{15,200}</p>' /tmp/mar7/wineries.html)",
+      "Bash(/usr/bin/curl -s https://scottsdale-wine-trail-web-staging.vercel.app/ --max-time 15)",
+      "Bash(git commit -m ' *)",
+      "Bash(/usr/bin/curl -s -o /dev/null -w '%{http_code}' https://scottsdale-wine-trail-web-staging.vercel.app/images/wineries/__TRACKED_VAR__.jpg --max-time 10)",
+      "Bash(/usr/bin/curl -s https://scottsdale-wine-trail-web-staging.vercel.app/wineries --max-time 15)",
+      "Bash(python3 -c \"import openpyxl; print\\('openpyxl ok'\\)\")",
+      "Bash(python3 -m pip install --user openpyxl Pillow)",
+      "Bash(python3)",
+      "Bash(/usr/bin/curl -s https://scottsdale-wine-trail-web-staging.vercel.app/feeds/google-shopping.xml --max-time 15)",
+      "Bash(/usr/bin/curl -s \"https://scottsdale-wine-trail-web-staging.vercel.app/feeds/google-shopping.xml\" --max-time 10)",
+      "Bash(/usr/bin/curl -s \"https://scottsdale-wine-trail-web-staging.vercel.app/wines\" --max-time 10)",
+      "Bash(python3 -c 'from PIL import Image; i=Image.open\\('\\\\''__TRACKED_VAR__'\\\\''\\); print\\(f'\\\\''{i.size[0]}x{i.size[1]} \\(ratio {i.size[0]/i.size[1]:.2f}\\)'\\\\''\\)')",
+      "Bash(/usr/bin/curl -s \"https://scottsdale-wine-trail-web-staging.vercel.app/events\" --max-time 10)",
+      "Bash(/usr/bin/curl -s https://scottsdale-wine-trail-web-staging.vercel.app/wineries/aridus-wine-company --max-time 15)"
+    ]
+  }
+}
