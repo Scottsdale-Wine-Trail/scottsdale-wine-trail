@@ -44,20 +44,29 @@ export function WinesClient({
     [wineries]
   );
 
+  // Alphabetical by wine name (not winery). ignorePunctuation so leading
+  // quotes/accents (e.g. “The Signature”, Fumé, Mourvèdre) sort naturally.
+  const collator = useMemo(
+    () => new Intl.Collator("en", { sensitivity: "base", ignorePunctuation: true }),
+    []
+  );
+
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    return wines.filter((wine) => {
-      if (winerySlug && wine.winerySlug !== winerySlug) return false;
-      if (color && wine.color !== color) return false;
-      if (q) {
-        const hay = `${wine.name} ${wine.wineryName} ${wine.color ?? ""} ${
-          wine.sweetness ?? ""
-        }`.toLowerCase();
-        if (!hay.includes(q)) return false;
-      }
-      return true;
-    });
-  }, [wines, search, winerySlug, color]);
+    return wines
+      .filter((wine) => {
+        if (winerySlug && wine.winerySlug !== winerySlug) return false;
+        if (color && wine.color !== color) return false;
+        if (q) {
+          const hay = `${wine.name} ${wine.wineryName} ${wine.color ?? ""} ${
+            wine.sweetness ?? ""
+          }`.toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      })
+      .sort((a, b) => collator.compare(a.name, b.name));
+  }, [wines, search, winerySlug, color, collator]);
 
   const colorCounts = useMemo(() => {
     const out: Record<string, number> = { Red: 0, White: 0, "Rosé": 0 };

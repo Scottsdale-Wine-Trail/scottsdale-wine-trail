@@ -87,6 +87,18 @@ function fullAddress(w: Winery) {
   return `${w.address}, ${w.city}, ${w.state} ${w.zip}`;
 }
 
+// Map-pin glyph used in place of stop numbers throughout the sidebar.
+function PinIcon() {
+  return (
+    <svg
+      width="13" height="13" viewBox="0 0 24 24" fill="currentColor"
+      aria-hidden="true"
+    >
+      <path d="M12 2C7.86 2 4.5 5.36 4.5 9.5c0 5.1 6.34 11.64 6.61 11.92a1.23 1.23 0 0 0 1.78 0c.27-.28 6.61-6.82 6.61-11.92C19.5 5.36 16.14 2 12 2Zm0 10.25a2.75 2.75 0 1 1 0-5.5 2.75 2.75 0 0 1 0 5.5Z" />
+    </svg>
+  );
+}
+
 // ─── Component ─────────────────────────────────────────────────────────────────
 
 export function WineriesMapClient({ wineries }: { wineries: Winery[] }) {
@@ -96,8 +108,8 @@ export function WineriesMapClient({ wineries }: { wineries: Winery[] }) {
   const mapRef         = useRef<import("mapbox-gl").Map | null>(null);
   // marker root elements, for colour/scale updates
   const markerEls  = useRef<Map<string, HTMLElement>>(new Map());
-  // number spans, for re-labelling when order changes
-  const markerNums = useRef<Map<string, HTMLSpanElement>>(new Map());
+  // keeps the Mapbox canvas sized on mobile (URL-bar show/hide, rotation)
+  const resizeObsRef = useRef<ResizeObserver | null>(null);
   // user-location marker element
   const userMarkerRef = useRef<import("mapbox-gl").Marker | null>(null);
 
@@ -161,6 +173,15 @@ export function WineriesMapClient({ wineries }: { wineries: Winery[] }) {
       // Force correct canvas dimensions once the container is measured
       map.once("load", () => map.resize());
 
+      // Mobile browsers change the viewport as the URL bar shows/hides and on
+      // rotation, which can leave Mapbox with a stale (grey / clipped) canvas.
+      // A ResizeObserver on the container re-syncs the canvas whenever it moves.
+      if ("ResizeObserver" in window && mapContainerRef.current) {
+        const ro = new ResizeObserver(() => mapRef.current?.resize());
+        ro.observe(mapContainerRef.current);
+        resizeObsRef.current = ro;
+      }
+
       map.on("load", () => {
         if (!mounted) return;
 
@@ -185,15 +206,13 @@ export function WineriesMapClient({ wineries }: { wineries: Winery[] }) {
           },
         });
 
-        // Numbered markers, placed once at winery coords
-        // Numbers are updated via markerNums refs when order changes
-        const snap = sortedByTrail(wineries); // initial order for placement
-        snap.forEach((winery, idx) => {
+        // Teardrop pins (no numbers) placed once at each winery's coords.
+        wineries.forEach((winery) => {
           if (winery.lat == null || winery.lng == null) return;
 
           const el = document.createElement("div");
           el.style.cssText = `
-            width:34px;height:34px;
+            width:30px;height:30px;
             border-radius:50% 50% 50% 0;transform:rotate(-45deg);
             cursor:pointer;border:2.5px solid white;
             box-shadow:0 2px 10px rgba(0,0,0,.22);
@@ -201,13 +220,9 @@ export function WineriesMapClient({ wineries }: { wineries: Winery[] }) {
             display:flex;align-items:center;justify-content:center;
             transition:background .2s,transform .2s,box-shadow .2s;
           `;
-          const num = document.createElement("span");
-          num.textContent = String(idx + 1);
-          num.style.cssText = `
-            transform:rotate(45deg);color:white;font-size:12px;
-            font-weight:700;font-family:"Playfair Display",Georgia,serif;line-height:1;
-          `;
-          el.appendChild(num);
+          const dot = document.createElement("span");
+          dot.style.cssText = `width:9px;height:9px;border-radius:50%;background:white;`;
+          el.appendChild(dot);
           el.addEventListener("click", () => {
             setActiveId(winery.id);
             map.flyTo({ center: [winery.lng!, winery.lat!], zoom: 15, duration: 700 });
@@ -218,7 +233,6 @@ export function WineriesMapClient({ wineries }: { wineries: Winery[] }) {
             .addTo(map);
 
           markerEls.current.set(winery.id, el);
-          markerNums.current.set(winery.id, num);
         });
       });
     }
@@ -252,23 +266,17 @@ export function WineriesMapClient({ wineries }: { wineries: Winery[] }) {
 
     return () => {
       mounted = false;
+      resizeObsRef.current?.disconnect();
+      resizeObsRef.current = null;
       mapRef.current?.remove();
       mapRef.current = null;
       markerEls.current.clear();
-      markerNums.current.clear();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
-  // ── Re-label markers + redraw trail line when order changes ───────────────
+  // ── Redraw trail line when order changes ──────────────────────────────────
   useEffect(() => {
-    // Update number labels
-    ordered.forEach((winery, idx) => {
-      const span = markerNums.current.get(winery.id);
-      if (span) span.textContent = String(idx + 1);
-    });
-
-    // Update trail line
     const map = mapRef.current;
     if (!map) return;
     const src = map.getSource("trail") as { setData?: (d: unknown) => void } | undefined;
@@ -394,10 +402,10 @@ export function WineriesMapClient({ wineries }: { wineries: Winery[] }) {
 
   // ──────────────────────────────────────────────────────────────────────────
   return (
-    <div className="flex flex-col md:flex-row h-[calc(100vh-64px)]">
+    <div className="flex flex-col md:flex-row h-[calc(100dvh-64px)]">
 
       {/* ── Sidebar ─────────────────────────────────────────────────────── */}
-      <aside className="md:w-[380px] flex flex-col bg-white border-r border-gray-100 overflow-hidden md:h-full h-[55vh] order-2 md:order-1">
+      <aside className="md:w-[380px] md:flex-none flex-1 min-h-0 flex flex-col bg-white border-r border-gray-100 overflow-hidden md:h-full order-2 md:order-1">
 
         {/* Header */}
         <div className="px-5 py-4 border-b border-gray-100 shrink-0">
@@ -447,11 +455,11 @@ export function WineriesMapClient({ wineries }: { wineries: Winery[] }) {
         {activeWinery && (
           <div className="px-4 py-4 border-b border-gray-100 bg-cream shrink-0">
             <div className="flex items-center gap-2 mb-2">
-              <span className="inline-flex items-center justify-center w-7 h-7 rounded-full wine-gradient text-white text-xs font-bold font-serif shrink-0">
-                {activeIdx + 1}
+              <span className="inline-flex items-center justify-center w-7 h-7 rounded-full wine-gradient text-white shrink-0">
+                <PinIcon />
               </span>
               <span className="text-xs font-semibold text-gray-400 tracking-widest uppercase">
-                {isLast ? "Final Stop" : `Stop ${activeIdx + 1} of ${ordered.length}`}
+                {isLast ? "Final Stop" : "Trail Stop"}
               </span>
               {/* Walk time from prev stop */}
               {activeIdx > 0 && (() => {
@@ -555,11 +563,11 @@ export function WineriesMapClient({ wineries }: { wineries: Winery[] }) {
                   }`}
                 >
                   <span
-                    className={`mt-0.5 shrink-0 inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold font-serif transition-colors ${
-                      isActive ? "gold-gradient text-white" : "bg-gray-100 text-gray-500"
+                    className={`mt-0.5 shrink-0 inline-flex items-center justify-center w-6 h-6 rounded-full transition-colors ${
+                      isActive ? "gold-gradient text-white" : "bg-gray-100 text-gray-400"
                     }`}
                   >
-                    {idx + 1}
+                    <PinIcon />
                   </span>
 
                   <div className="min-w-0 flex-1">
@@ -592,7 +600,7 @@ export function WineriesMapClient({ wineries }: { wineries: Winery[] }) {
       </aside>
 
       {/* ── Map ─────────────────────────────────────────────────────────── */}
-      <section className="flex-1 relative order-1 md:order-2 min-h-[45vh] md:min-h-0">
+      <section className="relative order-1 md:order-2 h-[45dvh] md:h-full md:flex-1">
         {!token ? (
           <div className="h-full flex flex-col items-center justify-center bg-cream text-center px-8 gap-5">
             <div>
@@ -618,7 +626,7 @@ export function WineriesMapClient({ wineries }: { wineries: Winery[] }) {
 
             {/* Idle prompt */}
             {!activeWinery && !optimizing && (
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-sm shadow-lg rounded-2xl px-5 py-3 text-sm text-gray-700 font-medium pointer-events-none border border-gray-100 whitespace-nowrap">
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-max max-w-[calc(100%-2rem)] text-center bg-white/90 backdrop-blur-sm shadow-lg rounded-2xl px-5 py-3 text-sm text-gray-700 font-medium pointer-events-none border border-gray-100">
                 Select a stop · or use <span className="text-burgundy-600">Optimise Route</span> for your location
               </div>
             )}
@@ -627,8 +635,8 @@ export function WineriesMapClient({ wineries }: { wineries: Winery[] }) {
             {activeWinery && (
               <div className="md:hidden absolute bottom-4 left-4 right-4 bg-white rounded-2xl shadow-xl border border-gray-100 p-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="inline-flex items-center justify-center w-6 h-6 rounded-full wine-gradient text-white text-xs font-bold font-serif">
-                    {activeIdx + 1}
+                  <span className="inline-flex items-center justify-center w-6 h-6 rounded-full wine-gradient text-white shrink-0">
+                    <PinIcon />
                   </span>
                   <p className="font-serif font-semibold text-gray-900 text-sm truncate">
                     {activeWinery.name}

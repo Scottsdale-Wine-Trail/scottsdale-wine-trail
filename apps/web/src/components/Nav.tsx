@@ -77,12 +77,20 @@ export function Nav() {
       <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
         <Link
           href="/"
-          className={`font-serif text-lg font-semibold tracking-wide transition-colors ${
-            solid ? "text-burgundy-700" : "text-white"
-          }`}
+          className="flex items-center shrink-0"
+          aria-label="Scottsdale Wine Trail — home"
           onClick={() => setMenuOpen(false)}
         >
-          Scottsdale Wine Trail
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.svg"
+            alt="Scottsdale Wine Trail"
+            className={`h-9 w-auto transition-all duration-300 ${
+              solid
+                ? ""
+                : "[filter:brightness(0)_invert(1)] drop-shadow-[0_1px_6px_rgba(0,0,0,0.4)]"
+            }`}
+          />
         </Link>
 
         {/* Desktop nav */}
