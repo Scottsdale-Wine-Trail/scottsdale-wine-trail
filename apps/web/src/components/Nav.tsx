@@ -88,7 +88,7 @@ export function Nav() {
             className={`h-9 w-auto transition-all duration-300 ${
               solid
                 ? ""
-                : "[filter:brightness(0)_invert(1)] drop-shadow-[0_1px_6px_rgba(0,0,0,0.4)]"
+                : "[filter:brightness(0)_invert(1)_drop-shadow(0_1px_6px_rgba(0,0,0,0.45))]"
             }`}
           />
         </Link>

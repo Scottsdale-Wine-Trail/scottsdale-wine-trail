@@ -23,7 +23,7 @@ export default function RootLayout({
       <body className="font-sans antialiased" suppressHydrationWarning>
         <Providers>
           <Nav />
-          <main className="min-h-screen pt-16">{children}</main>
+          <main className="min-h-[100dvh] pt-16">{children}</main>
           <Footer />
         </Providers>
       </body>
