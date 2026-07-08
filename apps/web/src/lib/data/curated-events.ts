@@ -13,6 +13,32 @@ export type CuratedEvent = {
 
 export const CURATED_EVENTS: CuratedEvent[] = [
   {
+    id: "ldv-weekly-specials",
+    title: "Weekly Specials & Happy Hour",
+    venue: "LDV Winery",
+    schedule: "Every week · Details below",
+    type: "Specials",
+    body: [
+      "Monday & Tuesday — Half-off bottles, all day.",
+      "Wednesday & Thursday — $2.00 off flights, all day.",
+      "Friday Date Night (6 PM–close) — Bottle & Board special, $35. Choose a bottle (2019 Sky Island Viognier, 2017 Sky Island Grenache, or 2017 Sky Island Petite Sirah) plus a board (Hummus & Olive, or Meat or Cheese).",
+      "Happy Hour, Monday–Thursday 3–6 PM — $8 glasses: 2019 Sky Island Viognier, 2017 Sky Island Grenache, 2016 Grenache, 2017 Sky Island Petite Sirah, and 2016 Petite Sirah.",
+      "Tax and gratuity not included in these promotions.",
+    ],
+  },
+  {
+    id: "ldv-trivia-night",
+    title: "LDV Winery Trivia Night",
+    venue: "LDV Winery",
+    schedule: "Wednesday, July 1 · 6:30 PM",
+    type: "Trivia",
+    body: [
+      "Test your knowledge, one glass at a time!",
+      "Looking for a way to kick back, relax, and have some patriotic fun? Gather your friends and join LDV for our summer trivia series.",
+      "This very first trivia event celebrates 250 years of the American Spirit — celebrate Independence Day early!",
+    ],
+  },
+  {
     id: "meet-the-maker-dos-cabezas",
     title: "Meet the Maker: Dos Cabezas",
     venue: "The Wine Collective of Scottsdale",
@@ -108,4 +134,6 @@ export const TYPE_COLORS: Record<string, string> = {
   Class: "bg-blue-50 text-blue-700 border-blue-200",
   Educational: "bg-blue-50 text-blue-700 border-blue-200",
   Recurring: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  Specials: "bg-amber-50 text-amber-700 border-amber-200",
+  Trivia: "bg-red-50 text-red-700 border-red-200",
 };
